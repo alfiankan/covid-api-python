@@ -3,7 +3,7 @@
 
 ## Todo :
 
-- [PROCESS] Entry point for all API, provide general information of covid cases.
+- [DONE] Entry point for all API, provide general information of covid cases.
 - [ ] Provide yearly data of total covid cases.
 - [ ] Provide yearly data of total covid cases of the year provided in <year>.
 - [ ] Provide monthly data of total covid cases.

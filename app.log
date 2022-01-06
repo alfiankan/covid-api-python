@@ -1,0 +1,9 @@
+werkzeug - INFO -  * Running on http://localhost:3000/ (Press CTRL+C to quit)
+werkzeug - INFO - 127.0.0.1 - - [07/Jan/2022 00:45:16] "[31m[1mGET /yearly?since= HTTP/1.1[0m" 422 -
+werkzeug - INFO - 127.0.0.1 - - [07/Jan/2022 00:45:22] "GET /yearly?since=2020 HTTP/1.1" 200 -
+werkzeug - INFO - 127.0.0.1 - - [07/Jan/2022 00:45:26] "GET /yearly?since=2021 HTTP/1.1" 200 -
+werkzeug - INFO - 127.0.0.1 - - [07/Jan/2022 00:45:29] "GET /yearly?since=2022 HTTP/1.1" 200 -
+werkzeug - INFO - 127.0.0.1 - - [07/Jan/2022 00:45:35] "GET /yearly?since=2023 HTTP/1.1" 200 -
+werkzeug - INFO - 127.0.0.1 - - [07/Jan/2022 00:45:42] "[31m[1mGET /yearly?upto= HTTP/1.1[0m" 422 -
+werkzeug - INFO - 127.0.0.1 - - [07/Jan/2022 00:45:54] "GET /yearly?upto=2023 HTTP/1.1" 200 -
+werkzeug - INFO - 127.0.0.1 - - [07/Jan/2022 00:46:01] "GET /yearly?upto=2029 HTTP/1.1" 200 -

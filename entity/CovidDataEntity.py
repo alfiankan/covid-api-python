@@ -5,10 +5,29 @@ from dataclasses_json import dataclass_json
 @dataclass
 class TotalCase:
     total_positive: int = 0
-    total_hospitalized: int = 0
     total_recovered: int = 0
-    total_dead: int = 0
+    total_death: int = 0
+    total_active: int = 0
     new_positive: int = 0
-    new_hospitalized: int = 0
     new_recovered: int = 0
-    new_dead: int = 0
+    new_death: int = 0
+    new_active: int = 0
+
+@dataclass_json
+@dataclass
+class DailyCase:
+    date: int = 0
+    positive: int = 0
+    recovered: int = 0
+    death: int = 0
+    active: int = 0
+
+
+@dataclass_json
+@dataclass
+class YearlyCase:
+    year: int = 0
+    positive: int = 0
+    recovered: int = 0
+    death: int = 0
+    active: int = 0

@@ -1,3 +1,5 @@
+from datetime import datetime
+from entity.CovidDataEntity import YearlyCase
 from repository.CovidDataRepository import CovidDataRepository
 
 
@@ -25,7 +27,31 @@ class CovidUseCase():
             since (int): parameter to control since when (year) the data will be returned, default 2020
             upto (int): parameter to control up to when (year) the data will be returned, by default up to the current year.
         """
-        pass
+
+
+        dailyData, err = self._covidRepository.getDailyCases()
+        # TODO: handle error
+
+        yearlyResult = list()
+        ## filter daily data by year
+        for year in range(since, upto + 1):
+            positive: int = 0
+            recovered: int = 0
+            death: int = 0
+            active: int = 0
+
+            for covidCase in dailyData:
+                # assert if match year increment calculation
+                if datetime.utcfromtimestamp(covidCase.date).year == year:
+                    positive += covidCase.positive
+                    recovered += covidCase.recovered
+                    death += covidCase.death
+                    active += covidCase.active
+
+            # append calculation result
+            yearlyResult.append(YearlyCase(year, positive, recovered, death, active))
+
+        return yearlyResult, err
 
     def getYearlyCasesDetail(self):
         pass
