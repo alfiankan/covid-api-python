@@ -1,12 +1,17 @@
+from flask import Flask
 
-
-
-
-def coba(hello: str, year: int) -> str:
-    return hello + str(year)
-
+from handler.CovidApiHandler import CovidApiHandler
+from repository.CovidDataRepository import CovidDataRepository
+from usecase.CovidUseCase import CovidUseCase
 
 
 if __name__ == "__main__":
-    print("Start App")
-    print(coba("ffff", 2021) + 5)
+    app = Flask(__name__)
+
+    # starting dependeny injection
+    covidRepository = CovidDataRepository()
+    covidApiUseCase = CovidUseCase(covidRepository)
+    covidApiHandler = CovidApiHandler(app, covidApiUseCase)
+    covidApiHandler.route()
+
+    app.run("localhost", 3000, debug=False)

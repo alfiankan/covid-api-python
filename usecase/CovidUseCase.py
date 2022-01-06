@@ -1,10 +1,14 @@
+from repository.CovidDataRepository import CovidDataRepository
 
-class CovidCase():
-    def __init__(self):
-        pass
+
+class CovidUseCase():
+    def __init__(self, covidRepository: CovidDataRepository):
+        self._covidRepository = covidRepository
 
     def getGeneralInformation(self):
-        pass
+        ## TODO : handle if main source api error -> use cache
+        data, err = self._covidRepository.getUpdateData()
+        return data, err
 
     def getYearlyCasesList(self, since: int, upto: int):
         """Provide yearly data of total covid cases. by default between starting case (2020) until current year
