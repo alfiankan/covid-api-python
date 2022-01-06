@@ -22,17 +22,17 @@ class CovidDataRepository():
         try:
             # start request to source api
             r = requests.get('https://data.covid19.go.id/public/api/update.json', timeout=self.requestTimeOut)
-            resulData = r.json()["update"]
+            resulData = r.json()['update']
             # return data, error
             return TotalCase(
-                total_positive= resulData["total"]["jumlah_positif"],
-                total_hospitalized= resulData["total"]["jumlah_dirawat"],
-                total_recovered= resulData["total"]["jumlah_sembuh"],
-                total_dead= resulData["total"]["jumlah_meninggal"],
-                new_positive= resulData["penambahan"]["jumlah_positif"],
-                new_hospitalized= resulData["penambahan"]["jumlah_dirawat"],
-                new_recovered= resulData["penambahan"]["jumlah_sembuh"],
-                new_dead= resulData["penambahan"]["jumlah_meninggal"],
+                total_positive= resulData['total']['jumlah_positif'],
+                total_hospitalized= resulData['total']['jumlah_dirawat'],
+                total_recovered= resulData['total']['jumlah_sembuh'],
+                total_dead= resulData['total']['jumlah_meninggal'],
+                new_positive= resulData['penambahan']['jumlah_positif'],
+                new_hospitalized= resulData['penambahan']['jumlah_dirawat'],
+                new_recovered= resulData['penambahan']['jumlah_sembuh'],
+                new_dead= resulData['penambahan']['jumlah_meninggal'],
             ), None
         except Exception as e:
             # catch error
