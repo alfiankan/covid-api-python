@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, Response
 from entity.BaseEntity import BaseApiResponse
 from usecase.CovidUseCase import CovidUseCase
 import time
@@ -10,7 +10,12 @@ class CovidApiHandler():
         self.useCase = covidUseCase
 
     def getGeneralInformation(self):
-        return BaseApiResponse(ok=True, data="Hello World", message="success").to_json()
+        result, err = self.useCase.getGeneralInformation()
+        # TODO: handle loging
+        print("error", err)
+        if err != None:
+            return Response(BaseApiResponse(ok=False, data={}, message="something wrong with server").to_json(), status=500, content_type="application/json")
+        return Response(BaseApiResponse(ok=True, data=result, message="success").to_json(), status=200, content_type="application/json")
 
     def route(self):
         @self.http.route("/", methods=["GET"])

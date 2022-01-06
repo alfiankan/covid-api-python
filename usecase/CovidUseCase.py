@@ -2,12 +2,20 @@ from repository.CovidDataRepository import CovidDataRepository
 
 
 class CovidUseCase():
+    """
+    UseCase class hold CovidUseCase Business Logic.
+
+    Attributes
+    ----------
+    covidRepository : CovidDataRepository
+        repository object
+    """
     def __init__(self, covidRepository: CovidDataRepository):
         self._covidRepository = covidRepository
 
     def getGeneralInformation(self):
         ## TODO : handle if main source api error -> use cache
-        data, err = self._covidRepository.getUpdateData()
+        data, err = self._covidRepository.getLastUpdateSummary()
         return data, err
 
     def getYearlyCasesList(self, since: int, upto: int):

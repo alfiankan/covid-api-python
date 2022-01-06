@@ -4,11 +4,11 @@ from dataclasses_json import dataclass_json
 @dataclass_json
 @dataclass
 class TotalCase:
-    positive: int = 0
-    hospitalized: int = 0
-    recovered: int = 0
-    dead: int = 0
-    newPositive: int = 0
-    newHospitalized: int = 0
-    newRecovered: int = 0
-    newDead: int = 0
+    total_positive: int = 0
+    total_hospitalized: int = 0
+    total_recovered: int = 0
+    total_dead: int = 0
+    new_positive: int = 0
+    new_hospitalized: int = 0
+    new_recovered: int = 0
+    new_dead: int = 0

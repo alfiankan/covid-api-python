@@ -5,7 +5,7 @@ def testGetLastUpdatedData():
     """Positive Test Get Last Updated Data From Repository
     """
     repo = CovidDataRepository()
-    result, err = repo.getUpdateData()
+    result, err = repo.getLastUpdateSummary()
     print(result)
     # must instance of TotalCase Entity
     assert err == None
