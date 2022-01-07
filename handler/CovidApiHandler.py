@@ -19,8 +19,25 @@ class CovidApiHandler():
         # TODO: handle loging
         if err != None:
             self.logger.error(err)
-            return Response(BaseApiResponse(ok=False, data={}, message='something wrong with server').to_json(), status=500, content_type='application/json')
-        return Response(BaseApiResponse(ok=True, data=result, message='success').to_json(), status=200, content_type='application/json')
+            return Response(
+                BaseApiResponse(
+                    ok=False,
+                    data={},
+                    message='something wrong with server'
+                ).to_json(),
+                status=500,
+                content_type='application/json'
+            )
+
+        return Response(
+            BaseApiResponse(
+                ok=True,
+                data=result,
+                message='success'
+            ).to_json(),
+            status=200,
+            content_type='application/json'
+        )
 
     def getYearlyData(self):
         # get query param since, upto
@@ -33,15 +50,41 @@ class CovidApiHandler():
             validateIsNumber(upto, "upto")
         ]
 
+
         if isValidationError(valErr):
-            return Response(BaseApiResponse(ok=False, data={}, message='Validation error, {}'.format(validationErrMessage(valErr))).to_json(), status=422, content_type='application/json')
+            return Response(
+                BaseApiResponse(
+                    ok=False,
+                    data={},
+                    message='Validation error, {}'.format(validationErrMessage(valErr))
+                ).to_json(),
+                status=422,
+                content_type='application/json'
+            )
+
 
         result, err = self.useCase.getYearlyCasesList(int(since), int(upto))
 
         if err != None:
             self.logger.error(err)
-            return Response(BaseApiResponse(ok=False, data={}, message='something wrong with server').to_json(), status=500, content_type='application/json')
-        return Response(BaseApiResponse(ok=True, data=result, message='success').to_json(), status=200, content_type='application/json')
+            return Response(
+                BaseApiResponse(
+                    ok=False,
+                    data={},
+                    message='something wrong with server'
+                ).to_json(),
+                status=500,
+                content_type='application/json'
+            )
+        return Response(
+            BaseApiResponse(
+                ok=True,
+                data=result,
+                message='success'
+            ).to_json(),
+            status=200,
+            content_type='application/json'
+        )
 
     def route(self):
         @self.http.route('/', methods=['GET'])

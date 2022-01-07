@@ -1,25 +1,43 @@
-from entity.CovidDataEntity import DailyCase, TotalCase
+from entity.CovidDataEntity import TotalCase, YearlyCase
 from repository.CovidDataRepository import CovidDataRepository
-import datetime
+from repository.MinistryDataRepository import MinistryDataRepository
 
+import sqlite3
 
 def testGetLastUpdateSummary():
     """Positive Test Get Last Updated Data From Repository
     """
-    repo = CovidDataRepository()
-    result, err = repo.getLastUpdateSummary()
-    print(result)
-    # must instance of TotalCase Entity
+    pass
+
+def testGetTotalCasesAllTime():
+    db = sqlite3.connect('covid_database.db', isolation_level=None)
+    repo = CovidDataRepository(db)
+    res, err = repo.getLastUpdateSummary()
+    print(res)
     assert err == None
-    assert isinstance(result, TotalCase)
+    assert isinstance(res, TotalCase)
 
 
-def testGetDailyCases():
-    """Positive Test Get Daily Cases
-    """
-    repo = CovidDataRepository()
-    result, err = repo.getDailyCases()
+def testGetDatabaseDataYearly():
+    db = sqlite3.connect('covid_database.db', isolation_level=None)
+    repo = CovidDataRepository(db)
+    res, err = repo.getYearlyCases(2020, 2023)
 
-    # must instance of TotalCase Entity
+    assert isinstance(res[0], YearlyCase)
+
+def testTruncate():
+    db = sqlite3.connect('covid_database.db', isolation_level=None)
+    repo = CovidDataRepository(db)
+    err = repo.truncateData()
     assert err == None
-    assert isinstance(result[0], DailyCase)
+
+def testSyncData():
+    db = sqlite3.connect('covid_database.db', isolation_level=None)
+    repo = CovidDataRepository(db)
+    ministryRepo = MinistryDataRepository()
+    repo.truncateData()
+
+    ministryData, _ = ministryRepo.getDailyCases()
+
+    err = repo.bulkInsertDailyCaseData(ministryData)
+    assert err == None
