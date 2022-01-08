@@ -16,36 +16,52 @@ class CovidApiHandler():
         self.useCase = covidUseCase # init usecase deps
         self.logger = logging.getLogger('root') # get root logger
 
+
+    def serverErrorResponse(self):
+        """
+        Returns:
+            return api response serverity error
+        """
+        return Response(
+            BaseApiResponse(ok=False, data={}, message='something wrong with server').to_json(),
+            status=500,
+            content_type='application/json'
+        )
+
+
+    def notFoundResponse(self):
+        """
+        Returns:
+            return api response serverity error
+        """
+        return Response(
+            BaseApiResponse(ok=False, data={}, message='data not found').to_json(),
+            status=404,
+            content_type='application/json'
+        )
+
+
     def getGeneralInformation(self):
         """handle request general information
 
         Returns:
             [json]: [response json]
         """
+
         # process use case
         result, err = self.useCase.getGeneralInformation()
         # TODO: handle loging
         if err != None:
             self.logger.error(err)
-            return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='something wrong with server'
-                ).to_json(),
-                status=500,
-                content_type='application/json'
-            )
+            # return server error json
+            return self.serverErrorResponse()
 
         return Response(
-            BaseApiResponse(
-                ok=True,
-                data=result,
-                message='success'
-            ).to_json(),
+            BaseApiResponse(ok=True, data=result, message='success').to_json(),
             status=200,
             content_type='application/json'
         )
+
 
     def getYearlyData(self):
         """handle request get data yearly
@@ -53,6 +69,7 @@ class CovidApiHandler():
         Returns:
             [json]: [response json]
         """
+
         # get query param since, upto
         since = request.args.get('since', 2020)
         upto = request.args.get('upto', datetime.now().year)
@@ -63,41 +80,27 @@ class CovidApiHandler():
             validateIsNumber(upto, "upto")
         ]
 
-
         if isValidationError(valErr):
             return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='Validation error, {}'.format(validationErrMessage(valErr))
-                ).to_json(),
+                BaseApiResponse(ok=False, data={}, message='Validation error, {}'.format(validationErrMessage(valErr)) ).to_json(),
                 status=422,
                 content_type='application/json'
             )
 
         # process use case
         result, err = self.useCase.getYearlyCasesList(int(since), int(upto))
-
         if err != None:
             self.logger.error(err)
-            return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='something wrong with server'
-                ).to_json(),
-                status=500,
-                content_type='application/json'
-            )
+            # return server error json
+            return self.serverErrorResponse()
+
+        # return success response
         return Response(
-            BaseApiResponse(
-                ok=True,
-                data=result,
-                message='success'
-            ).to_json(),
+            BaseApiResponse(ok=True, data=result, message='success').to_json(),
             status=200,
             content_type='application/json'
         )
+
 
     def getDataByYear(self, year):
         """handle request get data by year
@@ -105,17 +108,12 @@ class CovidApiHandler():
         Returns:
             [json]: [response json]
         """
+
         # validate request
         valErr = [validateIsNumber(year, "year")]
-
-
         if isValidationError(valErr):
             return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='Validation error, {}'.format(validationErrMessage(valErr))
-                ).to_json(),
+                BaseApiResponse(ok=False, data={}, message='Validation error, {}'.format(validationErrMessage(valErr))).to_json(),
                 status=422,
                 content_type='application/json'
             )
@@ -124,35 +122,21 @@ class CovidApiHandler():
         result, err = self.useCase.getCaseByYear(year)
         if err != None:
             self.logger.error(err)
-            return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='something wrong with server'
-                ).to_json(),
-                status=500,
-                content_type='application/json'
-            )
+            # return server error json
+            return self.serverErrorResponse()
+
         # if data not found return epmty object
         if result == None:
-            return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='data not found'
-                ).to_json(),
-                status=404,
-                content_type='application/json'
-            )
+            # return not found
+            return self.notFoundResponse()
+
+        # return success response
         return Response(
-            BaseApiResponse(
-                ok=True,
-                data=result,
-                message='success'
-            ).to_json(),
+            BaseApiResponse(ok=True, data=result, message='success').to_json(),
             status=200,
             content_type='application/json'
         )
+
 
     def getMonthlyData(self):
         """handle request get data monthly
@@ -173,38 +157,25 @@ class CovidApiHandler():
 
         if isValidationError(valErr):
             return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='Validation error, {}'.format(validationErrMessage(valErr))
-                ).to_json(),
+                BaseApiResponse(ok=False, data={}, message='Validation error, {}'.format(validationErrMessage(valErr))).to_json(),
                 status=422,
                 content_type='application/json'
             )
 
         # process use case
         result, err = self.useCase.getMonthlyCase(since, upto)
-
         if err != None:
             self.logger.error(err)
-            return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='something wrong with server'
-                ).to_json(),
-                status=500,
-                content_type='application/json'
-            )
+            # return not found
+            return self.notFoundResponse()
+
+        # return success response
         return Response(
-            BaseApiResponse(
-                ok=True,
-                data=result,
-                message='success'
-            ).to_json(),
+            BaseApiResponse(ok=True, data=result, message='success').to_json(),
             status=200,
             content_type='application/json'
         )
+
 
     def getMonthlyDataByYear(self, year):
         """handle request get data monthly in a year
@@ -214,6 +185,7 @@ class CovidApiHandler():
         Returns:
             [json]: [response json]
         """
+
         since = request.args.get('since', '{}.01'.format(year))
         upto = request.args.get('upto', '{}.12'.format(year))
         # validate request query param
@@ -229,40 +201,27 @@ class CovidApiHandler():
                 valErr.append('month format request is not in year, make sure <year> in ?since=<year>.<month> and ?upto=<year>.<month>  /monthly/<year> is same year, (eg. monthly/2021?since=2021.05&upto=2021.09)')
         except:
             pass
-
         if isValidationError(valErr):
-                return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='Validation error, {}'.format(validationErrMessage(valErr))
-                ).to_json(),
+            return Response(
+                BaseApiResponse(ok=False, data={}, message='Validation error, {}'.format(validationErrMessage(valErr))).to_json(),
                 status=422,
                 content_type='application/json'
             )
+
         # process use case
         result, err = self.useCase.getMonthlyCase(since, upto)
-
         if err != None:
             self.logger.error(err)
-            return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='something wrong with server'
-                ).to_json(),
-                status=500,
-                content_type='application/json'
-            )
+            # return server error
+            return self.serverErrorResponse()
+
+        # return success response
         return Response(
-            BaseApiResponse(
-                ok=True,
-                data=result,
-                message='success'
-            ).to_json(),
+            BaseApiResponse(ok=True, data=result, message='success').to_json(),
             status=200,
             content_type='application/json'
         )
+
 
     def getMonthlyDataByYearMonth(self, year, month):
         """handle request get data monthly by year and month
@@ -277,41 +236,30 @@ class CovidApiHandler():
             validateIsmatchDateFormat(year, '%Y', 'since', '<year>.<month> eg. 2020  and cant be empty'),
             validateIsmatchDateFormat(month, '%m', 'upto', '<year>.<month> eg. 09  and cant be empty')
         ]
-
         if isValidationError(valErr):
             return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='Validation error, {}'.format(validationErrMessage(valErr))
-                ).to_json(),
+                BaseApiResponse(ok=False, data={}, message='Validation error, {}'.format(validationErrMessage(valErr))).to_json(),
                 status=422,
                 content_type='application/json'
             )
 
         # process use case
         result, err = self.useCase.getMonthlyCase('{}.{}'.format(year, month), '{}.{}'.format(year, month))
-
         if err != None:
             self.logger.error(err)
             return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='something wrong with server'
-                ).to_json(),
+                BaseApiResponse(ok=False, data={}, message='something wrong with server').to_json(),
                 status=500,
                 content_type='application/json'
             )
+
+        # return success response
         return Response(
-            BaseApiResponse(
-                ok=True,
-                data=result[0],
-                message='success'
-            ).to_json(),
+            BaseApiResponse(ok=True, data=result[0], message='success').to_json(),
             status=200,
             content_type='application/json'
         )
+
 
     def getDailyData(self):
         """handle request get data daily
@@ -329,41 +277,26 @@ class CovidApiHandler():
             validateIsmatchDateFormat(since, '%Y.%m.%d', 'since', '<year>.<month> eg. 2020.01.01 and cant be empty'),
             validateIsmatchDateFormat(upto, '%Y.%m.%d', 'upto', '<year>.<month> eg. 2020.01.01 and cant be empty')
         ]
-
         if isValidationError(valErr):
             return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='Validation error, {}'.format(validationErrMessage(valErr))
-                ).to_json(),
+                BaseApiResponse(ok=False, data={}, message='Validation error, {}'.format(validationErrMessage(valErr))).to_json(),
                 status=422,
                 content_type='application/json'
             )
 
         # process use case
         result, err = self.useCase.getDailyCase(since, upto)
-
         if err != None:
             self.logger.error(err)
-            return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='something wrong with server'
-                ).to_json(),
-                status=500,
-                content_type='application/json'
-            )
+            return self.serverErrorResponse()
+
+        # return success response
         return Response(
-            BaseApiResponse(
-                ok=True,
-                data=result,
-                message='success'
-            ).to_json(),
+            BaseApiResponse(ok=True, data=result, message='success').to_json(),
             status=200,
             content_type='application/json'
         )
+
 
     def getDailyDataByYear(self, year):
         """handle request get data daily in a year
@@ -373,6 +306,7 @@ class CovidApiHandler():
         Returns:
             [json]: [response json]
         """
+
         since = request.args.get('since', '{}.01.01'.format(year))
         upto = request.args.get('upto', '{}.12.31'.format(year))
         # validate request query param
@@ -381,47 +315,33 @@ class CovidApiHandler():
             validateIsmatchDateFormat(since, '%Y.%m.%d', 'since', '<year>.<month> eg. 2020.01.01  and cant be empty'),
             validateIsmatchDateFormat(upto, '%Y.%m.%d', 'upto', '<year>.<month> eg. 2020.01.01  and cant be empty')
         ]
-
         # cek if day requested is in year param
         try:
             if datetime.strptime(since, "%Y.%m.%d").timetuple().tm_year != int(year) or datetime.strptime(upto, "%Y.%m.%d").timetuple().tm_year != int(year):
                 valErr.append('date format request is not in year, make sure <year> in ?since=<year>.<month>.<day> and ?upto=<year>.<month>.<day> /daily/<year> is same year, (eg. daily/2021?since=2021.05.01&upto=2021.09.01)')
         except:
             pass
-
         if isValidationError(valErr):
-                return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='Validation error, {}'.format(validationErrMessage(valErr))
-                ).to_json(),
+            return Response(
+                BaseApiResponse(ok=False,data={},message='Validation error, {}'.format(validationErrMessage(valErr))).to_json(),
                 status=422,
                 content_type='application/json'
             )
+
         # process use case
         result, err = self.useCase.getDailyCase(since, upto)
-
         if err != None:
             self.logger.error(err)
-            return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='something went wrong with server'
-                ).to_json(),
-                status=500,
-                content_type='application/json'
-            )
+            # retuen server error
+            return self.serverErrorResponse()
+
+        # return success response
         return Response(
-            BaseApiResponse(
-                ok=True,
-                data=result,
-                message='success'
-            ).to_json(),
-            status=200,
-            content_type='application/json'
+                BaseApiResponse(ok=True, data=result, message='success').to_json(),
+                status=200,
+                content_type='application/json'
         )
+
 
     def getDailyDataInYearMonth(self, year, month):
         """handle request get data daily in year and month
@@ -435,32 +355,27 @@ class CovidApiHandler():
             validateIsNumber(year, "year"),
             validateIsNumber(month, "month")
         ]
+        # validation month year valid
         try:
             monthrange(int(year), int(month))[1]
         except:
             valErr.append('make sure year month and date in 2021.01.01 date format')
             return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='Validation error, {}'.format(validationErrMessage(valErr))
-                ).to_json(),
+                BaseApiResponse(ok=False, data={}, message='Validation error, {}'.format(validationErrMessage(valErr))).to_json(),
                 status=422,
                 content_type='application/json'
             )
         # calculate total day of month
 
         totalDayOfMonth = monthrange(int(year), int(month))[1]
-
-
         since = request.args.get('since', '{}.{}.01'.format(year, month))
         upto = request.args.get('upto', '{}.{}.{}'.format(year, month, totalDayOfMonth ))
+
         # validate request query param
         valErr.append(validateIsmatchDateFormat(since, '%Y.%m.%d', 'since', '<year>.<month>.<date> eg. 2020.01.01  and cant be empty'))
         valErr.append(validateIsmatchDateFormat(upto, '%Y.%m.%d', 'upto', '<year>.<month>.<date> eg. 2020.01.01  and cant be empty'))
 
         # cek if month requested is in year param
-
         try:
             dateSince = datetime.strptime(since, "%Y.%m.%d").timetuple()
             dateUpto = datetime.strptime(upto, "%Y.%m.%d").timetuple()
@@ -471,37 +386,25 @@ class CovidApiHandler():
 
         if isValidationError(valErr):
             return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='Validation error, {}'.format(validationErrMessage(valErr))
-                ).to_json(),
+                BaseApiResponse(ok=False, data={}, message='Validation error, {}'.format(validationErrMessage(valErr))).to_json(),
                 status=422,
                 content_type='application/json'
             )
+
         # process use case
         result, err = self.useCase.getDailyCase(since, upto)
-
         if err != None:
             self.logger.error(err)
-            return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='something wrong with server'
-                ).to_json(),
-                status=500,
-                content_type='application/json'
-            )
+            # return server error
+            return self.serverErrorResponse()
+
+        # return success response
         return Response(
-            BaseApiResponse(
-                ok=True,
-                data=result,
-                message='success'
-            ).to_json(),
+            BaseApiResponse(ok=True, data=result, message='success').to_json(),
             status=200,
             content_type='application/json'
         )
+
 
     def getDailyDataByDate(self, year, month, date):
         """handle request get data monthly by year and month
@@ -520,11 +423,7 @@ class CovidApiHandler():
 
         if isValidationError(valErr):
             return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='Validation error, {}'.format(validationErrMessage(valErr))
-                ).to_json(),
+                BaseApiResponse(ok=False, data={}, message='Validation error, {}'.format(validationErrMessage(valErr))).to_json(),
                 status=422,
                 content_type='application/json'
             )
@@ -534,21 +433,12 @@ class CovidApiHandler():
 
         if err != None:
             self.logger.error(err)
-            return Response(
-                BaseApiResponse(
-                    ok=False,
-                    data={},
-                    message='something wrong with server'
-                ).to_json(),
-                status=500,
-                content_type='application/json'
-            )
+            # return server error
+            return self.serverErrorResponse()
+
+        # return success response
         return Response(
-            BaseApiResponse(
-                ok=True,
-                data=result[0],
-                message='success'
-            ).to_json(),
+            BaseApiResponse(ok=True, data=result[0], message='success').to_json(),
             status=200,
             content_type='application/json'
         )

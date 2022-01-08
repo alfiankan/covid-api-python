@@ -18,7 +18,7 @@ def testIsEmpty():
 def testValidateIsNumber():
     """[UNIT] test case 'r' is number"""
     vallErr = validateIsNumber('r', 'input')
-    assert vallErr == "input Must be number integer"
+    assert 'input Must be number integer' in vallErr
 
 def testValidationErrMessage():
     """[UNIT] test convert list error to one line message"""

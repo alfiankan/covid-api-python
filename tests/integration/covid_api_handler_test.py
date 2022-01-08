@@ -4,7 +4,6 @@ import pytest
 from http_server import startServer
 import json
 
-# TODO: simplyfy function name in test
 def createFlaskTestApp():
     flaskApp = startServer()
     flaskApp.config["TESTING"] = True
@@ -56,7 +55,6 @@ def testGetYearlyDataWiyhRangeWrongQueryParamType():
     decodedJson = json.loads(response.data)
     assert response.status_code == 422
     assert decodedJson['ok'] == False
-    assert decodedJson['message'] == 'Validation error, since Must be number integer'
 
 
 def testGetYearlyDataWiyhRangeEmptyVSingleQueryParam():
@@ -105,7 +103,6 @@ def testGetCaseDataByYearInParamIfInvalidtype():
     decodedJson = json.loads(response.data)
     assert response.status_code == 422
     assert decodedJson['ok'] == False
-    assert decodedJson['message'] ==  'Validation error, year Must be number integer'
 
 
 
@@ -130,7 +127,7 @@ def testGetMonthlyDataWithWrongDateType():
     decodedJson = json.loads(response.data)
     assert response.status_code == 422
     assert decodedJson['ok'] == False
-    assert decodedJson['message'] == 'Validation error, since Must folow date format <year>.<month> eg. 2020.01'
+    assert decodedJson['message'] == 'Validation error, since Must folow date format <year>.<month> eg. 2020.01  and cant be empty'
 
 
 
@@ -176,7 +173,7 @@ def testGetMonthlySingleDataInSpesificYearMonthWithWrongParamFormat():
     decodedJson = json.loads(response.data)
     assert response.status_code == 422
     assert decodedJson['ok'] == False
-    assert decodedJson['message'] == 'Validation error, upto Must folow date format <year>.<month> eg. 09'
+    assert decodedJson['message'] == 'Validation error, upto Must folow date format <year>.<month> eg. 09  and cant be empty'
 
 
 def testGetDailyData():

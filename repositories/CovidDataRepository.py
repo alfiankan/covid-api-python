@@ -7,8 +7,7 @@ import datetime
 
 from entites.RowFactory import RowFactory
 
-## TODO: refactor simplfy more function
-class CovidDataRepository(RowFactory):
+class CovidDataRepository():
     """
     Repository class hold data source.
 
@@ -20,6 +19,7 @@ class CovidDataRepository(RowFactory):
     def __init__(self, db: sqlite3.Connection):
         self._db = db
         self._tableName = 'covid_cases'
+        self._rowFactory = RowFactory()
 
 
     def getLastUpdateSummary(self):
@@ -42,7 +42,7 @@ class CovidDataRepository(RowFactory):
                         (SELECT active FROM covid_cases ORDER BY key DESC LIMIT 1)
                         FROM {}""".format(self._tableName)
 
-            self._db.row_factory = self.TotalCaseRowFactory
+            self._db.row_factory = self._rowFactory.TotalCaseRowFactory
             result: TotalCase = self._db.cursor().execute(stmt).fetchone()
             return result, None
 
@@ -91,6 +91,7 @@ class CovidDataRepository(RowFactory):
             return e
 
 
+
     def getYearlyCases(self, since: int, upto: int):
         """
         get data  yearly, with filter ability (since, upto), default is returning all yearly data
@@ -114,7 +115,7 @@ class CovidDataRepository(RowFactory):
                         WHERE CAST(year as desimal) BETWEEN ? AND ?
                         GROUP BY year""".format(self._tableName)
 
-            self._db.row_factory = self.YearlyCaseRowFactory
+            self._db.row_factory = self._rowFactory.YearlyCaseRowFactory
             result = self._db.cursor().execute(stmt, (since, upto))
 
             dbResult: List[YearlyCase] = list(result)
@@ -147,7 +148,7 @@ class CovidDataRepository(RowFactory):
                         WHERE CAST(year as desimal) = ?
                         GROUP BY year""".format(self._tableName)
 
-            self._db.row_factory = self.YearlyCaseRowFactory
+            self._db.row_factory = self._rowFactory.YearlyCaseRowFactory
             result: YearlyCase = self._db.cursor().execute(stmt, (year,)).fetchone()
 
             return result, None
@@ -178,7 +179,7 @@ class CovidDataRepository(RowFactory):
                         WHERE key BETWEEN ? AND ?
                         GROUP BY month""".format(self._tableName)
 
-            self._db.row_factory = self.MonthlyCaseRowFactory
+            self._db.row_factory = self._rowFactory.MonthlyCaseRowFactory
             result: list[MonthlyCase] = list(self._db.cursor().execute(stmt, (since, upto,)))
 
             return result, None
@@ -208,7 +209,7 @@ class CovidDataRepository(RowFactory):
                         FROM {}
                         WHERE key BETWEEN ? AND ?""".format(self._tableName)
 
-            self._db.row_factory = self.DailyCaseRowFactory
+            self._db.row_factory = self._rowFactory.DailyCaseRowFactory
             result: list[DailyCase] = list(self._db.cursor().execute(stmt, (since, upto,)))
 
             return result, None
