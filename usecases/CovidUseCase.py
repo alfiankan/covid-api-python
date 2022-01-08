@@ -32,6 +32,7 @@ class CovidUseCase():
                         (TotalCase): TotalCase class object, contain total case and last case
                         (error): return error
         """
+        # get data from repository
         data, err = self._covidRepository.getLastUpdateSummary()
         return data, err
 
@@ -46,7 +47,7 @@ class CovidUseCase():
                         (list[YearlyCase]): yearly case result data
                         (error): return error
         """
-
+        # get data from repository
         yearlyResult, err = self._covidRepository.getYearlyCases(since, upto)
         return yearlyResult, err
 
@@ -60,7 +61,7 @@ class CovidUseCase():
                         (YearlyCase): yearly case result data
                         (error): return error
         """
-
+        # get data from repository
         result, err = self._covidRepository.getCaseByYear(year)
         return result, err
 
@@ -71,12 +72,16 @@ class CovidUseCase():
             Returns:
                         (error): return error , return none if has no error
         """
+        # check if dependency exist
         if self._ministryRepository == None:
             return "You need MinistryDataRepository Dependency"
+
+        # get source data from ministry repository api
         sourceData, err = self._ministryRepository.getDailyCases()
         if err != None:
             return err
         else:
+            # if no error update data
             self._covidRepository.truncateData()
             self._covidRepository.bulkInsertDailyCaseData(sourceData)
 
@@ -99,8 +104,8 @@ class CovidUseCase():
 
             # get data from repository
             result, err = self._covidRepository.getMonthlyData(sinceTimeStamp, uptoTimeStamp)
-
             return result, err
+            
         except ValueError as e:
             return None, e
 
@@ -123,7 +128,7 @@ class CovidUseCase():
 
             # get data from repository
             result, err = self._covidRepository.getDailyData(sinceTimeStamp, uptoTimeStamp)
-
             return result, err
+
         except ValueError as e:
             return None, e

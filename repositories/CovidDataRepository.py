@@ -62,6 +62,7 @@ class CovidDataRepository():
             stmt = "DELETE FROM {}".format(self._tableName)
             self._db.execute(stmt)
             return None
+
         except Exception as e:
             # catch error
             return e
@@ -86,6 +87,7 @@ class CovidDataRepository():
             #  insert
             self._db.execute(str(stmt))
             return None
+            
         except Exception as e:
             # catch error
             return e

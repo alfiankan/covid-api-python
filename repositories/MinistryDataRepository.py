@@ -35,6 +35,7 @@ class MinistryDataRepository():
                 ))
 
             return dailyData, None
+
         except Exception as e:
             # catch error
             return [], e

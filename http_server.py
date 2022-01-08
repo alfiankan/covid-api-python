@@ -24,7 +24,7 @@ def startServer():
     covidApiUseCase = CovidUseCase(covidRepository)
     covidApiHandler = CovidApiHandler(app, covidApiUseCase)
     covidApiHandler.route()
-
+    
     return app
 
 if __name__ == "__main__":
