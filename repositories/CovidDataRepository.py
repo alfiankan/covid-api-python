@@ -168,7 +168,7 @@ class CovidDataRepository(RowFactory):
         """
         try:
             stmt = """SELECT
-                        strftime('%Y.%m',datetime(key, 'unixepoch')) AS month,
+                        strftime('%Y-%m',datetime(key, 'unixepoch')) AS month,
                         SUM(positive) AS positive,
                         SUM(recovered),
                         SUM(death),

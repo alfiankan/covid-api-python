@@ -91,3 +91,15 @@ def testGetMonthlyDataWithRange():
     assert isinstance(res, list)
     assert isinstance(res[0], MonthlyCase)
 
+
+def testGetDailyData():
+    """Positive Test Get daily cases data
+    """
+    since = time.mktime(datetime.strptime("2021.02.01", "%Y.%m.%d").timetuple())
+    upto = time.mktime((datetime.strptime("2021.02.10", "%Y.%m.%d") + relativedelta(days=1)).timetuple())
+    repo = _repository()
+    res, err = repo.getDailyData(since, upto)
+    print(res)
+    assert err == None
+    assert isinstance(res, YearlyCase)
+    assert res.active > 0
