@@ -16,7 +16,7 @@ def testGetGeneralInformation():
     useCase = _useCase()
     result, err = useCase.getGeneralInformation()
     assert isinstance(result, TotalCase)
-    assert err == None
+    assert err is None
 
 
 def testGetYearlyCase():
@@ -24,7 +24,7 @@ def testGetYearlyCase():
     """
     useCase = _useCase()
     result, err = useCase.getYearlyCasesList(2025, 2030)
-    assert err == None
+    assert err is None
 
 
 def testGetCaseByYear():
@@ -33,7 +33,7 @@ def testGetCaseByYear():
     useCase = _useCase()
     result, err = useCase.getCaseByYear(2022)
     isinstance(result, YearlyCase)
-    assert err == None
+    assert err is None
     assert result.active > 0
 
 
@@ -44,7 +44,7 @@ def testGetMonthlyCasesAll():
     for x in result:
         print(x)
     assert isinstance(result, list)
-    assert err == None
+    assert err is None
 
 
 def testGetDailyCasesAll():
@@ -54,4 +54,4 @@ def testGetDailyCasesAll():
     for x in result:
         print(x)
     assert isinstance(result, list)
-    assert err == None
+    assert err is None

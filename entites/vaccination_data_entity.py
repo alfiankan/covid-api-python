@@ -1,6 +1,7 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Any
 from dataclasses_json import dataclass_json
+
 
 @dataclass_json
 @dataclass
@@ -23,6 +24,7 @@ class YearlyVaccinationData():
     year: Any = 0
     first_vacc: int = 0
     second_vacc: int = 0
+
 
 @dataclass_json
 @dataclass

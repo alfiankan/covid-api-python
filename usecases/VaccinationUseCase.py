@@ -4,6 +4,7 @@ from datetime import datetime
 import time
 from dateutil.relativedelta import relativedelta
 
+
 class VaccinationUseCase():
     """
     UseData class hold VaccinationUseCase.
@@ -22,7 +23,6 @@ class VaccinationUseCase():
         self._vaccRepository = vaccRepository
         self._ministryRepository = ministryRepository
 
-
     def getGeneralInformation(self):
         """
         Entry point, provide general information of covid Datas.
@@ -34,7 +34,6 @@ class VaccinationUseCase():
         # get data from repository
         data, err = self._vaccRepository.getLastUpdateSummary()
         return data, err
-
 
     def getYearlyDatasList(self, since: int = 2020, upto: int = datetime.now().year):
         """Provide yearly data of total covid Datas. by default between starting Data (2020) until current year
@@ -50,7 +49,6 @@ class VaccinationUseCase():
         yearlyResult, err = self._vaccRepository.getYearlyData(since, upto)
         return yearlyResult, err
 
-
     def getDataByYear(self, year: int):
         """Provide Data by year
 
@@ -64,7 +62,6 @@ class VaccinationUseCase():
         result, err = self._vaccRepository.getDataByYear(year)
         return result, err
 
-
     def syncDataWithApiSource(self):
         """updating local database with covid19 source data from trusted source (goverment)
 
@@ -72,18 +69,17 @@ class VaccinationUseCase():
                         (error): return error , return none if has no error
         """
         # check if dependency exist
-        if self._ministryRepository == None:
+        if self._ministryRepository is None:
             return "You need MinistryDataRepository Dependency"
 
         # get source data from ministry repository api
         sourceData, _,  err = self._ministryRepository.getDailyTestAndVaccinationData()
-        if err != None:
+        if err is not None:
             return err
         else:
             # if no error update data
             self._vaccRepository.truncateData()
             self._vaccRepository.bulkInsertDailyData(sourceData)
-
 
     def getMonthlyData(self, since: str = '2020.01', upto: str = datetime.utcfromtimestamp(time.time()).strftime("%Y.%m")):
         """Provide Data monthly if empty return all monthly data
@@ -107,7 +103,6 @@ class VaccinationUseCase():
 
         except ValueError as e:
             return None, e
-
 
     def getDailyData(self, since: str = '2020.01.01', upto: str = datetime.utcfromtimestamp(time.time()).strftime("%Y.%m.%d")):
         """Provide Data monthly if empty return all daily data

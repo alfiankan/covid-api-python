@@ -1,7 +1,8 @@
 from entites.covid_data_entity import DailyCase, TotalCase, YearlyCase, MonthlyCase
 from entites.vaccination_data_entity import DailyVaccinationData, MonthlyVaccinationData, TotalVaccinationData, YearlyVaccinationData
-class RowFactory():
 
+
+class RowFactory():
 
     def TotalCaseRowFactory(self, cursor, row):
         """
@@ -25,7 +26,6 @@ class RowFactory():
                     new_active=row[7],
                 )
 
-
     def YearlyCaseRowFactory(self, cursor, row):
         """
         Sqlite row factory transfrom query result to YearlyCase class object
@@ -45,7 +45,6 @@ class RowFactory():
                     active=row[4]
                 )
 
-
     def MonthlyCaseRowFactory(self, cursor, row):
         """
         Sqlite row factory transfrom query result to MonthlyCase class object
@@ -64,7 +63,6 @@ class RowFactory():
                     death=row[3],
                     active=row[4]
                 )
-
 
     def DailyCaseRowFactory(self, cursor, row):
         """
@@ -151,4 +149,3 @@ class RowFactory():
                     first_vacc=row[1],
                     second_vacc=row[2]
                 )
-

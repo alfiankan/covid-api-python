@@ -10,6 +10,7 @@ from usecases.CovidUseCase import CovidUseCase
 from usecases.VaccinationUseCase import VaccinationUseCase
 import logging
 
+
 def startApi():
     # HTTP API SERVER ENTRY POINT
     app = Flask(__name__)
@@ -17,12 +18,18 @@ def startApi():
     app.url_map.strict_slashes = False
 
     # stream log to stdout for docker log
-    stdoutHandler = logging.StreamHandler(stdout) #set streamhandler to stdout
-    stdoutHandler.setFormatter(logging.Formatter('%(name)s - %(levelname)s - %(message)s'))
+    stdoutHandler = logging.StreamHandler(stdout)
+    stdoutHandler.setFormatter(
+        logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+    )
     logging.getLogger('root').addHandler(stdoutHandler)
 
     # starting dependeny injection
-    db = sqlite3.connect('covid_database.db', isolation_level=None, check_same_thread=False)
+    db = sqlite3.connect(
+        'covid_database.db',
+        isolation_level=None,
+        check_same_thread=False
+    )
 
     # covid case
     covidRepository = CovidDataRepository(db)
@@ -38,8 +45,7 @@ def startApi():
 
     return app
 
+
 if __name__ == "__main__":
     app = startApi()
     app.run(port=3000)
-
-

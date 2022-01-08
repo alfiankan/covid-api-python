@@ -21,8 +21,9 @@ def testGetTotalCasesAllTimeNegative():
     repo = VaccinationDataRepository(db)
     res, err = repo.getLastUpdateSummary()
     print(res)
-    assert err != None
+    assert err is not None
     assert isinstance(err, OperationalError)
+
 
 def testGetTotalCasesAllTime():
     """Positive Test Get total case all time
@@ -30,7 +31,7 @@ def testGetTotalCasesAllTime():
     repo = _repository()
     res, err = repo.getLastUpdateSummary()
     print(res)
-    assert err == None
+    assert err is None
     assert isinstance(res, TotalVaccinationData)
 
 
@@ -42,12 +43,13 @@ def testGetDatabaseDataYearly():
 
     assert isinstance(res[0], YearlyVaccinationData)
 
+
 def testTruncate():
     """Positive Test Gdelete data all
     """
     repo = _repository()
     err = repo.truncateData()
-    assert err == None
+    assert err is None
 
 
 def testSyncData():
@@ -60,8 +62,7 @@ def testSyncData():
     vaccData, _, _ = ministryRepo.getDailyTestAndVaccinationData()
 
     err = repo.bulkInsertDailyData(vaccData)
-    assert err == None
-
+    assert err is None
 
 
 def testGetCaseByYear():
@@ -70,9 +71,10 @@ def testGetCaseByYear():
     repo = _repository()
     res, err = repo.getDataByYear(2022)
     print(res)
-    assert err == None
+    assert err is None
     assert isinstance(res, YearlyVaccinationData)
     assert res.first_vacc > 0
+
 
 def testGetMonthlyDataWithRange():
     """Positive Test Get case monthly range
@@ -86,7 +88,7 @@ def testGetMonthlyDataWithRange():
         print(c)
 
     print(type(res))
-    assert err == None
+    assert err is None
     assert isinstance(res, list)
     assert isinstance(res[0], MonthlyVaccinationData)
 
@@ -98,6 +100,6 @@ def testGetDailyData():
     upto = time.mktime((datetime.strptime("2021.02.10", "%Y.%m.%d") + relativedelta(days=1)).timetuple())
     repo = _repository()
     res, err = repo.getDailyData(since, upto)
-    assert err == None
+    assert err is None
     assert isinstance(res[0], DailyVaccinationData)
     assert len(res) > 0

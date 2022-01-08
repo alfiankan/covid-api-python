@@ -5,6 +5,7 @@ from entites.covid_data_entity import DailyCase, MonthlyCase, TotalCase, YearlyC
 
 from internal.RowFactory import RowFactory
 
+
 class CovidDataRepository():
     """
     Repository class hold data source.
@@ -18,7 +19,6 @@ class CovidDataRepository():
         self._db = db
         self._tableName = 'covid_cases'
         self._rowFactory = RowFactory()
-
 
     def getLastUpdateSummary(self):
         """
@@ -47,7 +47,6 @@ class CovidDataRepository():
         except Exception as e:
             return None, e
 
-
     def truncateData(self):
         """
         set empty database data by deleting all record
@@ -64,7 +63,6 @@ class CovidDataRepository():
         except Exception as e:
             # catch error
             return e
-
 
     def bulkInsertDailyCaseData(self, data: List[DailyCase]):
         """
@@ -89,8 +87,6 @@ class CovidDataRepository():
         except Exception as e:
             # catch error
             return e
-
-
 
     def getYearlyCases(self, since: int, upto: int):
         """
@@ -125,7 +121,6 @@ class CovidDataRepository():
             # catch error
             return [], e
 
-
     def getCaseByYear(self, year: int):
         """
         get cases data by year,
@@ -157,7 +152,6 @@ class CovidDataRepository():
             # catch error
             return [], e
 
-
     def getMonthlyData(self, since: float, upto: float):
         """
         get cases data monthly
@@ -187,7 +181,6 @@ class CovidDataRepository():
         except Exception as e:
             # catch error
             return [], e
-
 
     def getDailyData(self, since: float, upto: float):
         """

@@ -11,9 +11,9 @@ from usecases.VaccinationUseCase import VaccinationUseCase
 # DATABASE SYNC SCHEDULER ENTRY POINT
 # create db object
 
+
 def runSync():
     db = sqlite3.connect('covid_database.db', isolation_level=None, check_same_thread=False)
-
 
     ministryRepo = MinistryDataRepository()
 
@@ -27,7 +27,7 @@ def runSync():
     vacc = VaccinationUseCase(vaccRepo, ministryRepo)
     err = vacc.syncDataWithApiSource()
 
-    if err == None:
+    if err is None:
         print("Sync Success...")
     else:
         print(err)

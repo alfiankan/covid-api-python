@@ -67,8 +67,6 @@ def testGetYearlyDataWiyhRangeEmptyVSingleQueryParam():
     assert decodedJson['data'][0]['year'] == '2020'
     assert list(decodedJson['data'][0].keys()) == ['year', 'positive', 'recovered', 'death', 'active']
 
-
-
 def testGetCaseDataByYearInParam():
     """[POSITIVE] Test Route /yearly/2021 [get yearly cases by year]"""
     testApp = createFlaskTestApp()
@@ -87,9 +85,8 @@ def testGetCaseDataByYearInParamIfNotFound():
     response = testApp.get('/yearly/2029')
     print(response.data)
     decodedJson = json.loads(response.data)
-    assert response.status_code == 404
-    assert decodedJson['ok'] == False
-
+    assert response.status_code is 404
+    assert decodedJson['ok'] is False
 
 
 def testGetCaseDataByYearInParamIfInvalidtype():
@@ -99,7 +96,7 @@ def testGetCaseDataByYearInParamIfInvalidtype():
     print(response.data)
     decodedJson = json.loads(response.data)
     assert response.status_code == 422
-    assert decodedJson['ok'] == False
+    assert decodedJson['ok'] is False
 
 
 
@@ -123,7 +120,7 @@ def testGetMonthlyDataWithWrongDateType():
     print(response.status_code)
     decodedJson = json.loads(response.data)
     assert response.status_code == 422
-    assert decodedJson['ok'] == False
+    assert decodedJson['ok'] is False
     assert decodedJson['message'] == 'Validation error, since Must folow date format <year>.<month> eg. 2020.01  and cant be empty'
 
 
@@ -193,7 +190,7 @@ def testGetDailyDataWithWrongDateType():
     print(response.status_code)
     decodedJson = json.loads(response.data)
     assert response.status_code == 422
-    assert decodedJson['ok'] == False
+    assert decodedJson['ok'] is False
     assert decodedJson['message'] == 'Validation error, since Must folow date format <year>.<month> eg. 2020.01.01 and cant be empty'
 
 

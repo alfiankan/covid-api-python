@@ -2,8 +2,8 @@ import sqlite3
 from typing import List
 from pypika import Query
 from entites.vaccination_data_entity import DailyVaccinationData, MonthlyVaccinationData, TotalVaccinationData, YearlyVaccinationData
-
 from internal.RowFactory import RowFactory
+
 
 class VaccinationDataRepository():
     """
@@ -18,7 +18,6 @@ class VaccinationDataRepository():
         self._db = db
         self._tableName = 'vaccination'
         self._rowFactory = RowFactory()
-
 
     def getLastUpdateSummary(self):
         """
@@ -43,7 +42,6 @@ class VaccinationDataRepository():
         except Exception as e:
             return None, e
 
-
     def truncateData(self):
         """
         set empty database data by deleting all record
@@ -60,7 +58,6 @@ class VaccinationDataRepository():
         except Exception as e:
             # catch error
             return e
-
 
     def bulkInsertDailyData(self, data: List[DailyVaccinationData]):
         """
@@ -85,8 +82,6 @@ class VaccinationDataRepository():
         except Exception as e:
             # catch error
             return e
-
-
 
     def getYearlyData(self, since: int, upto: int):
         """
@@ -119,7 +114,6 @@ class VaccinationDataRepository():
             # catch error
             return [], e
 
-
     def getDataByYear(self, year: int):
         """
         gets data by year,
@@ -149,7 +143,6 @@ class VaccinationDataRepository():
             # catch error
             return [], e
 
-
     def getMonthlyData(self, since: float, upto: float):
         """
         gets data monthly
@@ -177,7 +170,6 @@ class VaccinationDataRepository():
         except Exception as e:
             # catch error
             return [], e
-
 
     def getDailyData(self, since: float, upto: float):
         """
