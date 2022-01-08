@@ -7,6 +7,7 @@ import datetime
 
 from entites.RowFactory import RowFactory
 
+## TODO: refactor simplfy more function
 class CovidDataRepository(RowFactory):
     """
     Repository class hold data source.
@@ -105,7 +106,7 @@ class CovidDataRepository(RowFactory):
         try:
             stmt = """SELECT
                         strftime('%Y',datetime(key, 'unixepoch')) AS year,
-                        SUM(positive) AS positive,
+                        SUM(positive),
                         SUM(recovered),
                         SUM(death),
                         SUM(active)
@@ -138,7 +139,7 @@ class CovidDataRepository(RowFactory):
         try:
             stmt = """SELECT
                         strftime('%Y',datetime(key, 'unixepoch')) AS year,
-                        SUM(positive) AS positive,
+                        SUM(positive),
                         SUM(recovered),
                         SUM(death),
                         SUM(active)
@@ -169,7 +170,7 @@ class CovidDataRepository(RowFactory):
         try:
             stmt = """SELECT
                         strftime('%Y-%m',datetime(key, 'unixepoch')) AS month,
-                        SUM(positive) AS positive,
+                        SUM(positive),
                         SUM(recovered),
                         SUM(death),
                         SUM(active)
@@ -187,3 +188,31 @@ class CovidDataRepository(RowFactory):
             return [], e
 
 
+    def getDailyData(self, since: float, upto: float):
+        """
+        get cases data daily
+                Parameters:
+                        since (timestamp unix): filter  start
+                        upto (timestamp unix): filter  end
+                Returns:
+                         (DailyCase): MonthlyCase case result
+                         (error): query error return None if has no error
+        """
+        try:
+            stmt = """SELECT
+                        strftime('%Y-%m-%d',datetime(key, 'unixepoch')) AS date,
+                        positive,
+                        recovered,
+                        death,
+                        active
+                        FROM {}
+                        WHERE key BETWEEN ? AND ?""".format(self._tableName)
+
+            self._db.row_factory = self.DailyCaseRowFactory
+            result: list[DailyCase] = list(self._db.cursor().execute(stmt, (since, upto,)))
+
+            return result, None
+
+        except Exception as e:
+            # catch error
+            return [], e

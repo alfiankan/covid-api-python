@@ -1,5 +1,5 @@
 from sqlite3.dbapi2 import OperationalError
-from entites.covid_data_entity import TotalCase, YearlyCase, MonthlyCase
+from entites.covid_data_entity import DailyCase, TotalCase, YearlyCase, MonthlyCase
 from repositories.CovidDataRepository import CovidDataRepository
 from repositories.MinistryDataRepository import MinistryDataRepository
 import sqlite3
@@ -99,7 +99,6 @@ def testGetDailyData():
     upto = time.mktime((datetime.strptime("2021.02.10", "%Y.%m.%d") + relativedelta(days=1)).timetuple())
     repo = _repository()
     res, err = repo.getDailyData(since, upto)
-    print(res)
     assert err == None
-    assert isinstance(res, YearlyCase)
-    assert res.active > 0
+    assert isinstance(res[0], DailyCase)
+    assert len(res) > 0

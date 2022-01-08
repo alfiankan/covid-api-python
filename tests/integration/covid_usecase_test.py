@@ -48,3 +48,12 @@ def testGetMonthlyCasesAll():
     assert err == None
 
 
+def testGetDailyCasesAll():
+    """Positive Test get all monthly cases"""
+    useCase = _useCase()
+    result, err = useCase.getDailyCase('2021.06.01','2021.06.20')
+    for x in result:
+        print(x)
+    assert isinstance(result, list)
+    assert len(result) == 20
+    assert err == None

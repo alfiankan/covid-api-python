@@ -1,4 +1,4 @@
-from entites.covid_data_entity import TotalCase, YearlyCase, MonthlyCase
+from entites.covid_data_entity import DailyCase, TotalCase, YearlyCase, MonthlyCase
 class RowFactory():
 
     def TotalCaseRowFactory(self, cursor, row):
@@ -55,6 +55,24 @@ class RowFactory():
         """
         return MonthlyCase(
                     month=row[0],
+                    positive=row[1],
+                    recovered=row[2],
+                    death=row[3],
+                    active=row[4]
+                )
+    def DailyCaseRowFactory(self, cursor, row):
+        """
+        Sqlite row factory transfrom query result to MonthlyCase class object
+
+                Parameters:
+                        cursor (sqlite3.Cursor): sqlite cursor
+                        row : row result tuple
+
+                Returns:
+                        (DailyCase): MonthlyCase class object
+        """
+        return DailyCase(
+                    date=row[0],
                     positive=row[1],
                     recovered=row[2],
                     death=row[3],

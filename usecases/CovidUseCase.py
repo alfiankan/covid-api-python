@@ -105,31 +105,25 @@ class CovidUseCase():
             return None, e
 
 
-    # def getMonthlyCaseOnYear(self, year: int, since: str = '2020.01', upto: str = datetime.utcfromtimestamp(time.time()).strftime("%Y.%m")):
-    #     """Provide case monthly if empty return all monthly data
+    def getDailyCase(self, since: str = '2020.01.01', upto: str = datetime.utcfromtimestamp(time.time()).strftime("%Y.%m.%d")):
+        """Provide case monthly if empty return all daily data
 
-    #         Parameters:
-    #                     year (int): year
-    #                     since (str): since month with format %Y.%m (eg. 2021.01) must be in @year
-    #                     upto (str): upto month with format %Y.%m (eg. 2021.01) must be in @year
-    #         Returns:
-    #                     (MonthlyCases): yearly case result data
-    #                     (error): return error
-    #     """
-    #     # validate since and upto match %Y.%m
-    #     try:
+            Parameters:
+                        since (str): since month with format %Y.%m.%d (eg. 2021.01.01)
+                        upto (str): upto month with format %Y.%m.%d (eg. 2021.01.01)
+            Returns:
+                        (DailyCase): yearly case result data
+                        (error): return error
+        """
+        # validate since and upto match %Y.%m
+        try:
+            # convert string year.moth to timestamp
+            sinceTimeStamp = time.mktime(datetime.strptime(since, "%Y.%m.%d").timetuple())
+            uptoTimeStamp = time.mktime((datetime.strptime(upto, "%Y.%m.%d") + relativedelta(days=1)).timetuple())
 
-    #         # cehck if month format is in year
+            # get data from repository
+            result, err = self._covidRepository.getDailyData(sinceTimeStamp, uptoTimeStamp)
 
-
-
-    #         # convert string year.moth to timestamp
-    #         sinceTimeStamp = time.mktime(datetime.strptime(since, "%Y.%m").timetuple())
-    #         uptoTimeStamp = time.mktime((datetime.strptime(upto, "%Y.%m") + relativedelta(months=1)).timetuple())
-
-    #         # get data from repository
-    #         result, err = self._covidRepository.getMonthlyData(sinceTimeStamp, uptoTimeStamp)
-
-    #         return result, err
-    #     except ValueError as e:
-    #         return None, e
+            return result, err
+        except ValueError as e:
+            return None, e

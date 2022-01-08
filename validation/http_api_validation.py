@@ -15,12 +15,12 @@ def validateIsTypeValid(data: Any, type: Any, fieldName: str):
     return "{} Must be {}".format(fieldName, type)
 
 def validateIsNumber(data: Any, fieldName: str):
-    """Validate if able to be int"""
+    """Validate if able to be int, and can't be empty'"""
     try:
         res = int(data)
         return None
     except:
-        return "{} Must be number integer".format(fieldName)
+        return "{} Must be number integer,  and cant be empty'".format(fieldName)
 
 def validationErrMessage(valErr: List[str]):
     """returning list error as one line message"""
