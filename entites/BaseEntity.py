@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Any
 from dataclasses_json import dataclass_json
 
 @dataclass_json
@@ -16,5 +17,5 @@ class BaseApiResponse:
         api response message
     """
     ok: bool
-    data: any
+    data: Any
     message: str

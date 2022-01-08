@@ -1,5 +1,6 @@
+from typing import List
 import requests
-from entity.CovidDataEntity import DailyCase
+from entites.CovidDataEntity import DailyCase
 
 class MinistryDataRepository():
     """
@@ -14,7 +15,7 @@ class MinistryDataRepository():
     def getDailyCases(self):
         """get source data public api
                 returns:
-                    (list[DailyCase]): result daily cases data
+                    (List[DailyCase]): result daily cases data
         """
         try:
             # start request to source api
@@ -22,7 +23,7 @@ class MinistryDataRepository():
             resultData = r.json()['update']["harian"]
 
             # create daily list object
-            dailyData: list[DailyCase] = list()
+            dailyData: List[DailyCase] = list()
             for row in resultData:
                 dailyData.append(DailyCase(
                     date=row['key']/1000,

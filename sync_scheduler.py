@@ -1,5 +1,5 @@
-from repository.CovidDataRepository import CovidDataRepository
-from repository.MinistryDataRepository import MinistryDataRepository
+from repositories.CovidDataRepository import CovidDataRepository
+from repositories.MinistryDataRepository import MinistryDataRepository
 from sqlalchemy import engine as alchemyEngine
 from sqlalchemy.pool import StaticPool
 from sqlalchemy.sql import text
@@ -7,7 +7,7 @@ import schedule
 import logging
 import time
 
-from usecase.CovidUseCase import CovidUseCase
+from usecases.CovidUseCase import CovidUseCase
 
 # DATABASE SYNC SCHEDULER ENTRY POINT
 # create db object

@@ -1,7 +1,8 @@
 from json.decoder import JSONDecodeError
 import sqlite3
+from typing import List
 from pypika import Query
-from entity.CovidDataEntity import DailyCase, TotalCase, YearlyCase
+from entites.CovidDataEntity import DailyCase, TotalCase, YearlyCase
 import datetime
 
 class CovidDataRepository():
@@ -17,11 +18,6 @@ class CovidDataRepository():
         self._db = db
         self._tableName = 'covid_cases'
 
-    def reconnectDatabase(self):
-        """"
-        Sqlite reconnect to db
-        """
-        pass
 
     def TotalCaseRowFactory(self, cursor, row):
         """
@@ -110,12 +106,12 @@ class CovidDataRepository():
             # catch error
             return e
 
-    def bulkInsertDailyCaseData(self, data: list[DailyCase]):
+    def bulkInsertDailyCaseData(self, data: List[DailyCase]):
         """
         bulk Inserting covid case data
 
                 Parameters:
-                        data (list[DailyCase]): daily cases data
+                        data (ListDailyCase]): daily cases data
 
                 Returns:
                         (error): sqlite error query return None if has no error
@@ -134,7 +130,7 @@ class CovidDataRepository():
             return e
 
 
-    def getYearlyCases(self, since = 2020, upto = datetime.datetime.now().year):
+    def getYearlyCases(self, since: int, upto: int):
         """
         get data by year, with filter ability (since, upto), default is returning all yearly data
 
@@ -143,7 +139,7 @@ class CovidDataRepository():
                         upto (int): filter year end
 
                 Returns:
-                         (list[YearlyCase]): yearly case list result
+                         (List[YearlyCase]): yearly case list result
                          (error): query error return None if has no error
         """
         try:
@@ -160,7 +156,7 @@ class CovidDataRepository():
             self._db.row_factory = self.YearlyCaseRowFactory
             result = self._db.cursor().execute(stmt, (since, upto))
 
-            dbResult: list[YearlyCase] = list(result)
+            dbResult: List[YearlyCase] = list(result)
             return dbResult, None
 
         except Exception as e:

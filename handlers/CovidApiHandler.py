@@ -1,10 +1,9 @@
 from datetime import datetime
 import logging
 from flask import Flask, Response, app, request
-from entity.BaseEntity import BaseApiResponse
-from handler.HandlerValidation import isValidationError, validateIsEmptyQueryParam, validateIsNumber, validateIsTypeValid, validationErrMessage
-from usecase.CovidUseCase import CovidUseCase
-import time
+from entites.BaseEntity import BaseApiResponse
+from validation.http_api_validation import isValidationError, validateIsNumber, validationErrMessage
+from usecases.CovidUseCase import CovidUseCase
 import gladiator as gl
 
 

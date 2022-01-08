@@ -1,8 +1,7 @@
-from datetime import datetime
-from entity.CovidDataEntity import YearlyCase
-from repository.CovidDataRepository import CovidDataRepository
-from repository.MinistryDataRepository import MinistryDataRepository
-
+import datetime
+from entites.CovidDataEntity import YearlyCase
+from repositories.MinistryDataRepository import MinistryDataRepository
+from repositories.CovidDataRepository import CovidDataRepository
 
 class CovidUseCase():
     """
@@ -32,12 +31,12 @@ class CovidUseCase():
         data, err = self._covidRepository.getLastUpdateSummary()
         return data, err
 
-    def getYearlyCasesList(self, since: int, upto: int):
+    def getYearlyCasesList(self, since: int = 2020, upto: int = datetime.datetime.now().year):
         """Provide yearly data of total covid cases. by default between starting case (2020) until current year
 
             Args:
-                        since (int): parameter to control since when (year) the data will be returned, default 2020
-                        upto (int): parameter to control up to when (year) the data will be returned, by default up to the current year.
+                        since (int): parameter to control since when (year) the data will be returned, default 2020 if empty
+                        upto (int): parameter to control up to when (year) the data will be returned, by default up to the current year if empty
             Returns:
                         (YearlyCase): yearly case result data
                         (error): return error

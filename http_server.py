@@ -2,9 +2,9 @@ import sqlite3
 from flask import Flask
 from sys import stdout
 
-from handler.CovidApiHandler import CovidApiHandler
-from repository.CovidDataRepository import CovidDataRepository
-from usecase.CovidUseCase import CovidUseCase
+from handlers.CovidApiHandler import CovidApiHandler
+from repositories.CovidDataRepository import CovidDataRepository
+from usecases.CovidUseCase import CovidUseCase
 import logging
 
 # HTTP API SERVER ENTRY POINT

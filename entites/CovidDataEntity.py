@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from typing import Any
 from dataclasses_json import dataclass_json
 
 @dataclass_json
@@ -18,7 +19,7 @@ class TotalCase:
 @dataclass
 class DailyCase:
     """Represent DailyCase Covid Case"""
-    date: any = 0
+    date: Any = 0
     positive: int = 0
     recovered: int = 0
     death: int = 0
@@ -29,7 +30,7 @@ class DailyCase:
 @dataclass
 class YearlyCase:
     """Represent YearlyCase Covid Case"""
-    year: any = 0
+    year: Any = 0
     positive: int = 0
     recovered: int = 0
     death: int = 0
