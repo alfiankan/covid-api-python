@@ -17,6 +17,7 @@ class CovidUseCase():
         source data repository object
     """
     def __init__(self, covidRepository: CovidDataRepository, ministryRepository: MinistryDataRepository = None):
+        # init repository deps
         self._covidRepository = covidRepository
         self._ministryRepository = ministryRepository
 
@@ -38,13 +39,27 @@ class CovidUseCase():
                         since (int): parameter to control since when (year) the data will be returned, default 2020 if empty
                         upto (int): parameter to control up to when (year) the data will be returned, by default up to the current year if empty
             Returns:
-                        (YearlyCase): yearly case result data
+                        (list[YearlyCase]): yearly case result data
                         (error): return error
         """
 
         yearlyResult, err = self._covidRepository.getYearlyCases(since, upto)
 
         return yearlyResult, err
+
+    def getCaseByYear(self, year: int):
+        """Provide case by year
+
+            Args:
+                        year (int): year
+            Returns:
+                        (YearlyCase): yearly case result data
+                        (error): return error
+        """
+
+        result, err = self._covidRepository.getCaseByYear(year)
+
+        return result, err
 
     def syncDataWithApiSource(self):
         """updating local database with covid19 source data from trusted source (goverment)

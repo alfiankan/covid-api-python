@@ -58,3 +58,17 @@ def testSyncData():
 
     err = repo.bulkInsertDailyCaseData(ministryData)
     assert err == None
+
+
+
+def testGetCaseByYear():
+    """Positive Test Get total case all time
+    """
+    repo = _repository()
+    res, err = repo.getCaseByYear(2022)
+    print(res)
+    assert err == None
+    assert isinstance(res, YearlyCase)
+    assert res.active > 0
+
+

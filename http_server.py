@@ -10,6 +10,8 @@ import logging
 def startServer():
     # HTTP API SERVER ENTRY POINT
     app = Flask(__name__)
+    # set slash not strict
+    app.url_map.strict_slashes = False
 
     # stream log to stdout for docker log
     stdoutHandler = logging.StreamHandler(stdout) #set streamhandler to stdout

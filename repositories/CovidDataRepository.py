@@ -132,7 +132,7 @@ class CovidDataRepository():
 
     def getYearlyCases(self, since: int, upto: int):
         """
-        get data by year, with filter ability (since, upto), default is returning all yearly data
+        get data  yearly, with filter ability (since, upto), default is returning all yearly data
 
                 Parameters:
                         since (int): filter year start
@@ -163,6 +163,36 @@ class CovidDataRepository():
             # catch error
             return [], e
 
+    def getCaseByYear(self, year: int):
+        """
+        get cases data by year,
+
+                Parameters:
+                        year (int): year
+
+                Returns:
+                         (YearlyCase): yearly case result
+                         (error): query error return None if has no error
+        """
+        try:
+            stmt = """SELECT
+                        strftime('%Y',datetime(key, 'unixepoch')) AS year,
+                        SUM(positive) AS positive,
+                        SUM(recovered),
+                        SUM(death),
+                        SUM(active)
+                        FROM {}
+                        WHERE CAST(year as desimal) = ?
+                        GROUP BY year""".format(self._tableName)
+
+            self._db.row_factory = self.YearlyCaseRowFactory
+            result: YearlyCase = self._db.cursor().execute(stmt, (year,)).fetchone()
+
+            return result, None
+
+        except Exception as e:
+            # catch error
+            return [], e
 
 
 

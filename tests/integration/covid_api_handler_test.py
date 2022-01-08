@@ -4,11 +4,15 @@ import pytest
 from http_server import startServer
 import json
 
-def testGetGeneralInformation():
-    """[POSITIVE] Test Route / [get general information]"""
+
+def createFlaskTestApp():
     flaskApp = startServer()
     flaskApp.config["TESTING"] = True
-    testApp = flaskApp.test_client()
+    return flaskApp.test_client()
+
+def testGetGeneralInformation():
+    """[POSITIVE] Test Route / [get general information]"""
+    testApp = createFlaskTestApp()
     response = testApp.get('/')
     print(response.status_code)
     decodedJson = json.loads(response.data)
@@ -19,9 +23,7 @@ def testGetGeneralInformation():
 
 def testGetYearlyData():
     """[POSITIVE] Test Route /yearly [get yearly cases]"""
-    flaskApp = startServer()
-    flaskApp.config["TESTING"] = True
-    testApp = flaskApp.test_client()
+    testApp = createFlaskTestApp()
     response = testApp.get('/yearly')
     print(response.status_code)
     decodedJson = json.loads(response.data)
@@ -33,9 +35,7 @@ def testGetYearlyData():
 
 def testGetYearlyDataWiyhRange():
     """[POSITIVE] Test Route /yearly?since=2020&upto=2021 [get yearly cases with year range]"""
-    flaskApp = startServer()
-    flaskApp.config["TESTING"] = True
-    testApp = flaskApp.test_client()
+    testApp = createFlaskTestApp()
     response = testApp.get('/yearly?since=2020&upto=2021')
     print(response.status_code)
     decodedJson = json.loads(response.data)
@@ -50,9 +50,7 @@ def testGetYearlyDataWiyhRange():
 
 def testGetYearlyDataWiyhRangeWrongQueryParamType():
     """[NEGATIVE] Test Route /yearly?since=abc&upto=2021 [get yearly cases with year range with alphabet]"""
-    flaskApp = startServer()
-    flaskApp.config["TESTING"] = True
-    testApp = flaskApp.test_client()
+    testApp = createFlaskTestApp()
     response = testApp.get('/yearly?since=abc&upto=2021')
     print(response.data)
     decodedJson = json.loads(response.data)
@@ -63,9 +61,7 @@ def testGetYearlyDataWiyhRangeWrongQueryParamType():
 
 def testGetYearlyDataWiyhRangeEmptyVSingleQueryParam():
     """[POSITIVE] Test Route /yearly?since=2020 [get yearly cases with year range with singlequery param]"""
-    flaskApp = startServer()
-    flaskApp.config["TESTING"] = True
-    testApp = flaskApp.test_client()
+    testApp = createFlaskTestApp()
     response = testApp.get('/yearly?since=2020')
     print(response.data)
     decodedJson = json.loads(response.data)
@@ -75,3 +71,38 @@ def testGetYearlyDataWiyhRangeEmptyVSingleQueryParam():
     assert len(decodedJson['data']) > 0
     assert decodedJson['data'][0]['year'] == '2020'
     assert list(decodedJson['data'][0].keys()) == ['year', 'positive', 'recovered', 'death', 'active']
+
+
+
+def testGetCaseDataByYearInParam():
+    """[POSITIVE] Test Route /yearly/2021 [get yearly cases by year]"""
+    testApp = createFlaskTestApp()
+    response = testApp.get('/yearly/2021')
+    print(response.data)
+    decodedJson = json.loads(response.data)
+    assert response.status_code == 200
+    assert decodedJson['ok'] == True
+    assert decodedJson['data']['year'] == '2021'
+    assert list(decodedJson['data'].keys()) == ['year', 'positive', 'recovered', 'death', 'active']
+
+
+def testGetCaseDataByYearInParamIfNotFound():
+    """[NEGATIVE] Test Route /yearly/2029 [get yearly cases by year not found]"""
+    testApp = createFlaskTestApp()
+    response = testApp.get('/yearly/2029')
+    print(response.data)
+    decodedJson = json.loads(response.data)
+    assert response.status_code == 404
+    assert decodedJson['ok'] == False
+
+
+
+def testGetCaseDataByYearInParamIfInvalidtype():
+    """[NEGATIVE] Test Route /yearly/two [get yearly cases by year invalid type]"""
+    testApp = createFlaskTestApp()
+    response = testApp.get('/yearly/two')
+    print(response.data)
+    decodedJson = json.loads(response.data)
+    assert response.status_code == 422
+    assert decodedJson['ok'] == False
+    assert decodedJson['message'] ==  'Validation error, year Must be number integer'
