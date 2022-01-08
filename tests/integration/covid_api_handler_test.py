@@ -85,7 +85,7 @@ def testGetCaseDataByYearInParamIfNotFound():
     response = testApp.get('/yearly/2029')
     print(response.data)
     decodedJson = json.loads(response.data)
-    assert response.status_code is 404
+    assert response.status_code == 404
     assert decodedJson['ok'] is False
 
 
