@@ -13,8 +13,11 @@
 
 - [DONE] Provide daily data of covid cases.
 - [DONE] Provide daily data of covid cases in the year provided in <year>
-- [DONE NO TEST] Provide daily data of covid cases in the year and month provided in <year> and <month>
+- [DONE] Provide daily data of covid cases in the year and month provided in <year> and <month>
 - [DONE] Provide daily data of covid cases on the day provided in <year>, <month> and, <date>
+
+
+
 
 
 - [ ] Entry point for all API, provide general information of vaccination.

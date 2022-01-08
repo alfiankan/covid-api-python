@@ -248,3 +248,28 @@ def testGetDailySingleDataInSpesificYearMonthWithWrongParamFormat():
     assert response.status_code == 422
     assert decodedJson['ok'] == False
     assert decodedJson['message'] == 'Validation error, make sure year month and date in 2021.01.01 date format'
+
+
+
+def testGetDailyDataInSpesificYear():
+    """[POSITIVE] Test Route /daily/2021/05?since=2021.05.01 [get daily cases in spesific year month]"""
+    testApp = createFlaskTestApp()
+    response = testApp.get('/daily/2021/05?since=2021.05.01')
+    print(response.status_code)
+    decodedJson = json.loads(response.data)
+    print(decodedJson['data'][0].keys())
+    assert response.status_code == 200
+    assert decodedJson['ok'] == True
+    assert len(decodedJson['data']) > 0
+    assert list(decodedJson['data'][0].keys()) == ['date', 'positive', 'recovered', 'death', 'active']
+
+
+def testGetDailyDataInSpesificYearWithWrongYearQueryParam():
+    """[NEGATIVE] Test Route /daily/2021/05?since=2021e.05.01 [get daily cases] with wrong month format (mont is not in spesific year)"""
+    testApp = createFlaskTestApp()
+    response = testApp.get('/daily/2021/05?since=2021e.05.01')
+    print(response.status_code)
+    decodedJson = json.loads(response.data)
+    assert response.status_code == 422
+    assert decodedJson['ok'] == False
+    assert decodedJson['message'] == 'Validation error, since Must folow date format <year>.<month>.<date> eg. 2020.01.01  and cant be empty'

@@ -460,8 +460,11 @@ class CovidApiHandler():
         valErr.append(validateIsmatchDateFormat(upto, '%Y.%m.%d', 'upto', '<year>.<month>.<date> eg. 2020.01.01  and cant be empty'))
 
         # cek if month requested is in year param
+
         try:
-            if datetime.strptime(since, "%Y.%m.%d").timetuple().tm_year != int(year) or datetime.strptime(upto, "%Y.%m.%d").timetuple().tm_year != int(year):
+            dateSince = datetime.strptime(since, "%Y.%m.%d").timetuple()
+            dateUpto = datetime.strptime(upto, "%Y.%m.%d").timetuple()
+            if dateSince.tm_year != int(year) or dateUpto.tm_year != int(year) or dateSince.tm_mon != int(month.strip("0")) or dateUpto.tm_mon != int(month.strip("0")):
                 valErr.append('month format request is not in year, make sure <year> in ?since=<year>.<month>.<date> and ?upto=<year>.<month>.<date>  /daily/<year>/<month> is same year, (eg. daily/2021/05?since=2021.05.01&upto=2021.05.10)')
         except:
             pass
