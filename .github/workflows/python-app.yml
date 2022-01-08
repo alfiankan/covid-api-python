@@ -37,10 +37,10 @@ jobs:
         
     - name: Build Docker Image
       id: buildAndPushImage
-      uses: abhishek-070/docker-image-build-push-action@v1.0
+      uses: Abhishek-070/Dockerhub-Build-Push@1240d89ce6f82ba5911cfbbd01f4d67229c11f69
       with:
           registry_url: 'docker.io'
-          repository_name: 'demo-app'
+          repository_name: 'indonesia-covid-api'
           user_name: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           image_version: 'v1.0'
