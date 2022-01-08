@@ -3,6 +3,7 @@ from entites.CovidDataEntity import TotalCase, YearlyCase
 from repositories.CovidDataRepository import CovidDataRepository
 from repositories.MinistryDataRepository import MinistryDataRepository
 import sqlite3
+import pytest
 
 def _repository():
     """Helper dependency injection"""
@@ -44,6 +45,7 @@ def testTruncate():
     repo = _repository()
     err = repo.truncateData()
     assert err == None
+
 
 def testSyncData():
     """Positive sync with source data
