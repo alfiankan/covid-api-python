@@ -8,6 +8,7 @@ from usecases.CovidUseCase import CovidUseCase
 import gladiator as gl
 import time
 
+# TODO: CLEANUP REFACTOR this class
 class CovidApiHandler():
     def __init__(self, flaskApp: Flask, covidUseCase: CovidUseCase):
         self.http = flaskApp
@@ -262,6 +263,55 @@ class CovidApiHandler():
             content_type='application/json'
         )
 
+    def getMonthlyDataByYearMonth(self, year, month):
+        """handle request get data monthly by year and month
+            return single json monthly data
+
+        Returns:
+            [json]: [response json]
+        """
+
+        # validate request
+        valErr = [
+            validateIsmatchDateFormat(year, '%Y', 'since', '<year>.<month> eg. 2020'),
+            validateIsmatchDateFormat(month, '%m', 'upto', '<year>.<month> eg. 09')
+        ]
+
+        if isValidationError(valErr):
+            return Response(
+                BaseApiResponse(
+                    ok=False,
+                    data={},
+                    message='Validation error, {}'.format(validationErrMessage(valErr))
+                ).to_json(),
+                status=422,
+                content_type='application/json'
+            )
+
+        # process use case
+        result, err = self.useCase.getMonthlyCase('{}.{}'.format(year, month), '{}.{}'.format(year, month))
+
+        if err != None:
+            self.logger.error(err)
+            return Response(
+                BaseApiResponse(
+                    ok=False,
+                    data={},
+                    message='something wrong with server'
+                ).to_json(),
+                status=500,
+                content_type='application/json'
+            )
+        return Response(
+            BaseApiResponse(
+                ok=True,
+                data=result[0],
+                message='success'
+            ).to_json(),
+            status=200,
+            content_type='application/json'
+        )
+
 
     def route(self):
         @self.http.route('/', methods=['GET'])
@@ -283,3 +333,7 @@ class CovidApiHandler():
         @self.http.route('/monthly/<year>', methods=['GET'])
         def _getMonthlyDataByYear(year):
             return self.getMonthlyDataByYear(year)
+
+        @self.http.route('/monthly/<year>/<month>', methods=['GET'])
+        def _getMonthlyDataByYearMonth(year, month):
+            return self.getMonthlyDataByYearMonth(year, month)

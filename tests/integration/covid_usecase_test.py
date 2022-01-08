@@ -46,3 +46,5 @@ def testGetMonthlyCasesAll():
     assert isinstance(result, list)
     assert len(result) == 7
     assert err == None
+
+

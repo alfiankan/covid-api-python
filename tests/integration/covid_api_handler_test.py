@@ -4,7 +4,7 @@ import pytest
 from http_server import startServer
 import json
 
-
+# TODO: simplyfy function name in test
 def createFlaskTestApp():
     flaskApp = startServer()
     flaskApp.config["TESTING"] = True
@@ -156,3 +156,24 @@ def testGetMonthlyDataInSpesificYearWithWrongYearQueryParam():
     assert response.status_code == 422
     assert decodedJson['ok'] == False
     assert decodedJson['message'] == 'Validation error, month format request is not in year, make sure <year> in ?since=<year>.<month> and ?upto=<year>.<month>  /monthly/<year> is same year, (eg. monthly/2021?since=2021.05&upto=2021.09)'
+
+def testGetMonthlySingleDataInSpesificYearMonth():
+    """[POSITIVE] Test Route /monthly/2021/02 [get monthly cases in spesific year and month]"""
+    testApp = createFlaskTestApp()
+    response = testApp.get('/monthly/2021/02')
+    print(response.status_code)
+    decodedJson = json.loads(response.data)
+    assert response.status_code == 200
+    assert decodedJson['ok'] == True
+    assert list(decodedJson['data'].keys()) == ['month', 'positive', 'recovered', 'death', 'active']
+
+
+def testGetMonthlySingleDataInSpesificYearMonthWithWrongParamFormat():
+    """[NEGATIVE] Test Route /monthly/2021/39 [get monthly cases] with wrong format """
+    testApp = createFlaskTestApp()
+    response = testApp.get('/monthly/2021/39')
+    print(response.status_code)
+    decodedJson = json.loads(response.data)
+    assert response.status_code == 422
+    assert decodedJson['ok'] == False
+    assert decodedJson['message'] == 'Validation error, upto Must folow date format <year>.<month> eg. 09'
