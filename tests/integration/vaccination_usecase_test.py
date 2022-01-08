@@ -45,7 +45,6 @@ def testGetMonthlyCasesAll():
     for x in result:
         print(x)
     assert isinstance(result, list)
-    assert len(result) == 7
     assert err == None
 
 
@@ -56,5 +55,4 @@ def testGetDailyCasesAll():
     for x in result:
         print(x)
     assert isinstance(result, list)
-    assert len(result) == 20
     assert err == None
