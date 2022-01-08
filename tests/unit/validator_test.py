@@ -2,7 +2,7 @@
 
 
 
-from validation.http_api_validation import isValidationError, validateIsNotEmpty, validateIsNumber, validateIsTypeValid, validationErrMessage
+from validation.http_api_validation import isValidationError, validateIsNotEmpty, validateIsNumber, validateIsTypeValid, validateIsmatchDateFormat, validationErrMessage
 
 def testIsTypeValid():
     """[UNIT] test case string is float"""
@@ -33,3 +33,10 @@ def testIsValidationError():
     valErr2 = "input Must be not empty"
     isError = isValidationError([valErr1, valErr2])
     assert isError == True
+
+
+def testValidateDateInput():
+    """[UNIT] validate is date string input match expected date format  """
+    vallErr = validateIsmatchDateFormat('20204.02', '%Y.%m', 'since', '<year>.<month> eg. 2020.01')
+    print(vallErr)
+    assert vallErr == "since Must folow date format <year>.<month> eg. 2020.01"

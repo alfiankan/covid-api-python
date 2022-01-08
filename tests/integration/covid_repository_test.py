@@ -1,9 +1,13 @@
 from sqlite3.dbapi2 import OperationalError
-from entites.CovidDataEntity import TotalCase, YearlyCase
+from entites.covid_data_entity import TotalCase, YearlyCase, MonthlyCase
 from repositories.CovidDataRepository import CovidDataRepository
 from repositories.MinistryDataRepository import MinistryDataRepository
 import sqlite3
 import pytest
+import time
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
 
 def _repository():
     """Helper dependency injection"""
@@ -71,4 +75,19 @@ def testGetCaseByYear():
     assert isinstance(res, YearlyCase)
     assert res.active > 0
 
+def testGetMonthlyDataWithRange():
+    """Positive Test Get case monthly range
+    """
+    since = time.mktime(datetime.strptime("2021.02", "%Y.%m").timetuple())
+    upto = time.mktime((datetime.strptime("2021.05", "%Y.%m") + relativedelta(months=1)).timetuple())
+    repo = _repository()
+    res, err = repo.getMonthlyData(since, upto)
+
+    for c in res:
+        print(c)
+
+    print(type(res))
+    assert err == None
+    assert isinstance(res, list)
+    assert isinstance(res[0], MonthlyCase)
 

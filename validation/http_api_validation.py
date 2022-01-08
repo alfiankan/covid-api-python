@@ -1,6 +1,7 @@
 
 from typing import Any, List
-
+import time
+from datetime import datetime
 def validateIsNotEmpty(data: str, fieldName: str):
     """Validate if data empty"""
     if data == '' or data == None:
@@ -31,3 +32,11 @@ def isValidationError(valError: List[str]):
         return True
     return False
 
+def validateIsmatchDateFormat(date: str, dateFormat: str, fieldName: str, readableFormat: str = '', ):
+    """Validate date format from string"""
+    try:
+        # convert string year.moth to timestamp
+        sinceTimeStamp = time.mktime(datetime.strptime(date, dateFormat).timetuple())
+        return None
+    except ValueError as e:
+        return "{} Must folow date format {}".format(fieldName, readableFormat)

@@ -1,7 +1,9 @@
-import datetime
-from entites.CovidDataEntity import YearlyCase
+from entites.covid_data_entity import YearlyCase
 from repositories.MinistryDataRepository import MinistryDataRepository
 from repositories.CovidDataRepository import CovidDataRepository
+from datetime import datetime
+import time
+from dateutil.relativedelta import relativedelta
 
 class CovidUseCase():
     """
@@ -21,6 +23,7 @@ class CovidUseCase():
         self._covidRepository = covidRepository
         self._ministryRepository = ministryRepository
 
+
     def getGeneralInformation(self):
         """
         Entry point, provide general information of covid cases.
@@ -32,10 +35,11 @@ class CovidUseCase():
         data, err = self._covidRepository.getLastUpdateSummary()
         return data, err
 
-    def getYearlyCasesList(self, since: int = 2020, upto: int = datetime.datetime.now().year):
+
+    def getYearlyCasesList(self, since: int = 2020, upto: int = datetime.now().year):
         """Provide yearly data of total covid cases. by default between starting case (2020) until current year
 
-            Args:
+            Parameters:
                         since (int): parameter to control since when (year) the data will be returned, default 2020 if empty
                         upto (int): parameter to control up to when (year) the data will be returned, by default up to the current year if empty
             Returns:
@@ -44,13 +48,13 @@ class CovidUseCase():
         """
 
         yearlyResult, err = self._covidRepository.getYearlyCases(since, upto)
-
         return yearlyResult, err
+
 
     def getCaseByYear(self, year: int):
         """Provide case by year
 
-            Args:
+            Parameters:
                         year (int): year
             Returns:
                         (YearlyCase): yearly case result data
@@ -58,8 +62,8 @@ class CovidUseCase():
         """
 
         result, err = self._covidRepository.getCaseByYear(year)
-
         return result, err
+
 
     def syncDataWithApiSource(self):
         """updating local database with covid19 source data from trusted source (goverment)
@@ -72,8 +76,30 @@ class CovidUseCase():
         sourceData, err = self._ministryRepository.getDailyCases()
         if err != None:
             return err
-        self._covidRepository.truncateData()
-        self._covidRepository.bulkInsertDailyCaseData(sourceData)
+        else:
+            self._covidRepository.truncateData()
+            self._covidRepository.bulkInsertDailyCaseData(sourceData)
 
-    def getYearlyCasesDetail(self):
-        pass
+
+    def getMonthlyCase(self, since: str = '2020.01', upto: str = datetime.utcfromtimestamp(time.time()).strftime("%Y.%m")):
+        """Provide case monthly if empty return all monthly data
+
+            Parameters:
+                        since (str): since month with format %Y.%m (eg. 2021.01)
+                        upto (str): upto month with format %Y.%m (eg. 2021.01)
+            Returns:
+                        (MonthlyCases): yearly case result data
+                        (error): return error
+        """
+        # validate since and upto match %Y.%m
+        try:
+            # convert string year.moth to timestamp
+            sinceTimeStamp = time.mktime(datetime.strptime(since, "%Y.%m").timetuple())
+            uptoTimeStamp = time.mktime((datetime.strptime(upto, "%Y.%m") + relativedelta(months=1)).timetuple())
+
+            # get data from repository
+            result, err = self._covidRepository.getMonthlyData(sinceTimeStamp, uptoTimeStamp)
+
+            return result, err
+        except ValueError as e:
+            return None, e

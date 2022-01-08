@@ -1,6 +1,6 @@
 from typing import List
 import requests
-from entites.CovidDataEntity import DailyCase
+from entites.covid_data_entity import DailyCase
 
 class MinistryDataRepository():
     """
@@ -11,6 +11,7 @@ class MinistryDataRepository():
     def __init__(self):
         # request connection timeout
         self._requestTimeOut = 30 #second
+
 
     def getDailyCases(self):
         """get source data public api

@@ -106,3 +106,17 @@ def testGetCaseDataByYearInParamIfInvalidtype():
     assert response.status_code == 422
     assert decodedJson['ok'] == False
     assert decodedJson['message'] ==  'Validation error, year Must be number integer'
+
+
+
+def testGetMonthlyData():
+    """[POSITIVE] Test Route /yearly [get yearly cases]"""
+    testApp = createFlaskTestApp()
+    response = testApp.get('/monthly')
+    print(response.status_code)
+    decodedJson = json.loads(response.data)
+    print(decodedJson['data'][0].keys())
+    assert response.status_code == 200
+    assert decodedJson['ok'] == True
+    assert len(decodedJson['data']) > 0
+    assert list(decodedJson['data'][0].keys()) == ['month', 'positive', 'recovered', 'death', 'active']

@@ -54,12 +54,9 @@ class RowFactory():
                         (MonthlyCase): MonthlyCase class object
         """
         return MonthlyCase(
-                    total_positive=row[0],
-                    total_recovered=row[1],
-                    total_death=row[2],
-                    total_active=row[3],
-                    new_positive=row[4],
-                    new_recovered=row[5],
-                    new_death=row[6],
-                    new_active=row[7],
+                    month=row[0],
+                    positive=row[1],
+                    recovered=row[2],
+                    death=row[3],
+                    active=row[4]
                 )

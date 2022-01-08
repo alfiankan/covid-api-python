@@ -2,10 +2,10 @@ from datetime import datetime
 import logging
 from flask import Flask, Response, app, request
 from entites.BaseEntity import BaseApiResponse
-from validation.http_api_validation import isValidationError, validateIsNumber, validationErrMessage
+from validation.http_api_validation import isValidationError, validateIsNumber, validateIsmatchDateFormat, validationErrMessage
 from usecases.CovidUseCase import CovidUseCase
 import gladiator as gl
-
+import time
 
 class CovidApiHandler():
     def __init__(self, flaskApp: Flask, covidUseCase: CovidUseCase):
@@ -151,6 +151,58 @@ class CovidApiHandler():
             content_type='application/json'
         )
 
+    def getMonthlyData(self):
+        """handle request get data monthly
+
+        Returns:
+            [json]: [response json]
+        """
+        # get query param since, upto
+        since = request.args.get('since', '2020.01')
+        upto = request.args.get('upto', datetime.utcfromtimestamp(time.time()).strftime("%Y.%m"))
+
+        # validate request
+        valErr = [
+            validateIsmatchDateFormat(since, '%Y.%m', 'since', '<year>.<month> eg. 2020.01'),
+            validateIsmatchDateFormat(upto, '%Y.%m', 'upto', '<year>.<month> eg. 2020.01')
+        ]
+
+        if isValidationError(valErr):
+            return Response(
+                BaseApiResponse(
+                    ok=False,
+                    data={},
+                    message='Validation error, {}'.format(validationErrMessage(valErr))
+                ).to_json(),
+                status=422,
+                content_type='application/json'
+            )
+
+        # process use case
+        result, err = self.useCase.getMonthlyCase(since, upto)
+
+        if err != None:
+            self.logger.error(err)
+            return Response(
+                BaseApiResponse(
+                    ok=False,
+                    data={},
+                    message='something wrong with server'
+                ).to_json(),
+                status=500,
+                content_type='application/json'
+            )
+        return Response(
+            BaseApiResponse(
+                ok=True,
+                data=result,
+                message='success'
+            ).to_json(),
+            status=200,
+            content_type='application/json'
+        )
+
+
     def route(self):
         @self.http.route('/', methods=['GET'])
         def _getGeneralInformation():
@@ -164,5 +216,8 @@ class CovidApiHandler():
         def _getDataByYear(year):
             return self.getDataByYear(year)
 
+        @self.http.route('/monthly', methods=['GET'])
+        def _getMonthlyData():
+            return self.getMonthlyData()
 
 

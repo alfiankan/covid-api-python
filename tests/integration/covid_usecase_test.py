@@ -1,5 +1,5 @@
 import sqlite3
-from entites.CovidDataEntity import TotalCase, YearlyCase
+from entites.covid_data_entity import TotalCase, YearlyCase
 from repositories.CovidDataRepository import CovidDataRepository
 from usecases.CovidUseCase import CovidUseCase
 
@@ -35,3 +35,14 @@ def testGetCaseByYear():
     isinstance(result, YearlyCase)
     assert err == None
     assert result.active > 0
+
+
+def testGetMonthlyCasesAll():
+    """Positive Test get all monthly cases"""
+    useCase = _useCase()
+    result, err = useCase.getMonthlyCase('2021.06','2021.12')
+    for x in result:
+        print(x)
+    assert isinstance(result, list)
+    assert len(result) == 7
+    assert err == None

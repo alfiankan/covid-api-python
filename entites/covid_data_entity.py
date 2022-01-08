@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, asdict
 from typing import Any
 from dataclasses_json import dataclass_json
 
@@ -35,6 +35,7 @@ class YearlyCase:
     recovered: int = 0
     death: int = 0
     active: int = 0
+
 
 
 @dataclass_json

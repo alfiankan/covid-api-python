@@ -2,7 +2,7 @@ from json.decoder import JSONDecodeError
 import sqlite3
 from typing import List
 from pypika import Query
-from entites.covid_data_entity import DailyCase, TotalCase, YearlyCase
+from entites.covid_data_entity import DailyCase, MonthlyCase, TotalCase, YearlyCase
 import datetime
 
 from entites.RowFactory import RowFactory
@@ -156,14 +156,34 @@ class CovidDataRepository(RowFactory):
             return [], e
 
 
-    def getAllMonthlyData(self):
+    def getMonthlyData(self, since: float, upto: float):
         """
         get cases data monthly
-
+                Parameters:
+                        since (timestamp unix): filter  start
+                        upto (timestamp unix): filter  end
                 Returns:
                          (MonthlyCase): MonthlyCase case result
                          (error): query error return None if has no error
         """
+        try:
+            stmt = """SELECT
+                        strftime('%Y.%m',datetime(key, 'unixepoch')) AS month,
+                        SUM(positive) AS positive,
+                        SUM(recovered),
+                        SUM(death),
+                        SUM(active)
+                        FROM {}
+                        WHERE key BETWEEN ? AND ?
+                        GROUP BY month""".format(self._tableName)
 
+            self._db.row_factory = self.MonthlyCaseRowFactory
+            result: list[MonthlyCase] = list(self._db.cursor().execute(stmt, (since, upto,)))
+
+            return result, None
+
+        except Exception as e:
+            # catch error
+            return [], e
 
 

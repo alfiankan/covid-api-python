@@ -3,7 +3,7 @@ test:
 cover:
 	pytest --cov
 dev:
-	python3 http_server.py && python3 sync_scheduler.py
+	python3 http_server.py
 run:
 	gunicorn --bind localhost:3000 wsgi:startServer && python3 sync_scheduler.py
 install:
