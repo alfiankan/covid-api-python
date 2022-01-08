@@ -1,6 +1,3 @@
-from flask.app import Flask
-import flask_unittest
-import pytest
 from http_server import startServer
 import json
 

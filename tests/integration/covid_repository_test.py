@@ -3,7 +3,6 @@ from entites.covid_data_entity import DailyCase, TotalCase, YearlyCase, MonthlyC
 from repositories.CovidDataRepository import CovidDataRepository
 from repositories.MinistryDataRepository import MinistryDataRepository
 import sqlite3
-import pytest
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta

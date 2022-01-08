@@ -1,11 +1,9 @@
-from json.decoder import JSONDecodeError
 import sqlite3
 from typing import List
 from pypika import Query
 from entites.covid_data_entity import DailyCase, MonthlyCase, TotalCase, YearlyCase
-import datetime
 
-from entites.RowFactory import RowFactory
+from internal.RowFactory import RowFactory
 
 class CovidDataRepository():
     """
@@ -87,7 +85,7 @@ class CovidDataRepository():
             #  insert
             self._db.execute(str(stmt))
             return None
-            
+
         except Exception as e:
             # catch error
             return e

@@ -37,7 +37,7 @@ def isValidationError(valError: List[str]):
     return False
 
 
-def validateIsmatchDateFormat(date: str, dateFormat: str, fieldName: str, readableFormat: str = '', ):
+def validateIsmatchDateFormat(date: str, dateFormat: str, fieldName: str, readableFormat: str = ''):
     """Validate date format from string"""
     try:
         # convert string year.moth to timestamp

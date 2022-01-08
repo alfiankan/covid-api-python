@@ -1,7 +1,3 @@
-
-
-
-
 from validation.http_api_validation import isValidationError, validateIsNotEmpty, validateIsNumber, validateIsTypeValid, validateIsmatchDateFormat, validationErrMessage
 
 def testIsTypeValid():
