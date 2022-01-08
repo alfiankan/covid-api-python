@@ -103,3 +103,33 @@ class CovidUseCase():
             return result, err
         except ValueError as e:
             return None, e
+
+
+    # def getMonthlyCaseOnYear(self, year: int, since: str = '2020.01', upto: str = datetime.utcfromtimestamp(time.time()).strftime("%Y.%m")):
+    #     """Provide case monthly if empty return all monthly data
+
+    #         Parameters:
+    #                     year (int): year
+    #                     since (str): since month with format %Y.%m (eg. 2021.01) must be in @year
+    #                     upto (str): upto month with format %Y.%m (eg. 2021.01) must be in @year
+    #         Returns:
+    #                     (MonthlyCases): yearly case result data
+    #                     (error): return error
+    #     """
+    #     # validate since and upto match %Y.%m
+    #     try:
+
+    #         # cehck if month format is in year
+
+
+
+    #         # convert string year.moth to timestamp
+    #         sinceTimeStamp = time.mktime(datetime.strptime(since, "%Y.%m").timetuple())
+    #         uptoTimeStamp = time.mktime((datetime.strptime(upto, "%Y.%m") + relativedelta(months=1)).timetuple())
+
+    #         # get data from repository
+    #         result, err = self._covidRepository.getMonthlyData(sinceTimeStamp, uptoTimeStamp)
+
+    #         return result, err
+    #     except ValueError as e:
+    #         return None, e

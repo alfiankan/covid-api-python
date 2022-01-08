@@ -110,9 +110,9 @@ def testGetCaseDataByYearInParamIfInvalidtype():
 
 
 def testGetMonthlyData():
-    """[POSITIVE] Test Route /yearly [get yearly cases]"""
+    """[POSITIVE] Test Route /monthly?since=2021.05 [get monthly cases]"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/monthly')
+    response = testApp.get('/monthly?since=2021.05')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     print(decodedJson['data'][0].keys())
@@ -120,3 +120,39 @@ def testGetMonthlyData():
     assert decodedJson['ok'] == True
     assert len(decodedJson['data']) > 0
     assert list(decodedJson['data'][0].keys()) == ['month', 'positive', 'recovered', 'death', 'active']
+
+
+def testGetMonthlyDataWithWrongDateType():
+    """[NEGATIVE] Test Route /monthly?since=2021.054 [get monthly cases] with wrong param"""
+    testApp = createFlaskTestApp()
+    response = testApp.get('/monthly?since=2021.054')
+    print(response.status_code)
+    decodedJson = json.loads(response.data)
+    assert response.status_code == 422
+    assert decodedJson['ok'] == False
+    assert decodedJson['message'] == 'Validation error, since Must folow date format <year>.<month> eg. 2020.01'
+
+
+
+def testGetMonthlyDataInSpesificYear():
+    """[POSITIVE] Test Route /monthly/2021?since=2021.05 [get monthly cases in spesific year]"""
+    testApp = createFlaskTestApp()
+    response = testApp.get('/monthly/2021?since=2021.05')
+    print(response.status_code)
+    decodedJson = json.loads(response.data)
+    print(decodedJson['data'][0].keys())
+    assert response.status_code == 200
+    assert decodedJson['ok'] == True
+    assert len(decodedJson['data']) > 0
+    assert list(decodedJson['data'][0].keys()) == ['month', 'positive', 'recovered', 'death', 'active']
+
+
+def testGetMonthlyDataInSpesificYearWithWrongYearQueryParam():
+    """[NEGATIVE] Test Route /monthly?since=2021.054 [get monthly cases] with wrong month format (mont is not in spesific year)"""
+    testApp = createFlaskTestApp()
+    response = testApp.get('/monthly/2021?since=2020.04')
+    print(response.status_code)
+    decodedJson = json.loads(response.data)
+    assert response.status_code == 422
+    assert decodedJson['ok'] == False
+    assert decodedJson['message'] == 'Validation error, month format request is not in year, make sure <year> in ?since=<year>.<month> and ?upto=<year>.<month>  /monthly/<year> is same year, (eg. monthly/2021?since=2021.05&upto=2021.09)'

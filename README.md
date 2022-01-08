@@ -8,7 +8,7 @@
 - [DONE] Provide yearly data of total covid cases of the year provided in <year>.
 
 - [DONE] Provide monthly data of total covid cases.
-- [ ] Provide monthly data of total covid cases in the year provided in <year>.
+- [DONE] Provide monthly data of total covid cases in the year provided in <year>.
 - [ ] Provide monthly data of total covid cases in the month and year provided in <year> and <month>.
 
 - [ ] Provide daily data of covid cases.
