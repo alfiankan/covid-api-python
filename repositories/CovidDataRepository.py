@@ -2,10 +2,12 @@ from json.decoder import JSONDecodeError
 import sqlite3
 from typing import List
 from pypika import Query
-from entites.CovidDataEntity import DailyCase, TotalCase, YearlyCase
+from entites.covid_data_entity import DailyCase, TotalCase, YearlyCase
 import datetime
 
-class CovidDataRepository():
+from entites.RowFactory import RowFactory
+
+class CovidDataRepository(RowFactory):
     """
     Repository class hold data source.
 
@@ -17,50 +19,6 @@ class CovidDataRepository():
     def __init__(self, db: sqlite3.Connection):
         self._db = db
         self._tableName = 'covid_cases'
-
-
-    def TotalCaseRowFactory(self, cursor, row):
-        """
-        Sqlite row factory transfrom query result to TotalCase class object
-
-                Parameters:
-                        cursor (sqlite3.Cursor): sqlite cursor
-                        row : row result tuple
-
-                Returns:
-                        (TotalCase): TotalCase class object
-        """
-        return TotalCase(
-                    total_positive=row[0],
-                    total_recovered=row[1],
-                    total_death=row[2],
-                    total_active=row[3],
-                    new_positive=row[4],
-                    new_recovered=row[5],
-                    new_death=row[6],
-                    new_active=row[7],
-                )
-
-    def YearlyCaseRowFactory(self, cursor, row):
-        """
-        Sqlite row factory transfrom query result to YearlyCase class object
-
-                Parameters:
-                        cursor (sqlite3.Cursor): sqlite cursor
-                        row : row result tuple
-
-                Returns:
-                        (YearlyCase): YearlyCase class object
-        """
-        return YearlyCase(
-                    year=row[0],
-                    positive=row[1],
-                    recovered=row[2],
-                    death=row[3],
-                    active=row[4]
-                )
-
-
 
 
     def getLastUpdateSummary(self):
@@ -90,6 +48,7 @@ class CovidDataRepository():
         except Exception as e:
             return None, e
 
+
     def truncateData(self):
         """
         set empty database data by deleting all record
@@ -105,6 +64,7 @@ class CovidDataRepository():
         except Exception as e:
             # catch error
             return e
+
 
     def bulkInsertDailyCaseData(self, data: List[DailyCase]):
         """
@@ -163,6 +123,7 @@ class CovidDataRepository():
             # catch error
             return [], e
 
+
     def getCaseByYear(self, year: int):
         """
         get cases data by year,
@@ -193,6 +154,16 @@ class CovidDataRepository():
         except Exception as e:
             # catch error
             return [], e
+
+
+    def getAllMonthlyData(self):
+        """
+        get cases data monthly
+
+                Returns:
+                         (MonthlyCase): MonthlyCase case result
+                         (error): query error return None if has no error
+        """
 
 
 
