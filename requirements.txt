@@ -1,0 +1,9 @@
+dataclasses
+typing
+dataclasses_json
+flask
+pypika
+sqlite3
+requests
+python-dateutil
+schedule
