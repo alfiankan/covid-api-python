@@ -32,3 +32,7 @@
 - [ ] Provide daily data of vaccination in the year provided in <year>
 - [ ] Provide daily data of vaccination in the year and month provided in <year> and <month>.
 - [ ] Provide daily data of vaccination on the day provided in <year>, <month> and, <date>.
+
+
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/7847165-0d3be7de-dd45-4183-822c-174b6ef6db3e?action=collection%2Ffork&collection-url=entityId%3D7847165-0d3be7de-dd45-4183-822c-174b6ef6db3e%26entityType%3Dcollection%26workspaceId%3D04cc5d73-b93a-4a0e-ae83-43e1c6e73e6d#?env%5Bnodeflux%5D=W3sia2V5IjoiaG9zdCIsInZhbHVlIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiZW5hYmxlZCI6dHJ1ZX1d)

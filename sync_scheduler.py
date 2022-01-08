@@ -1,23 +1,32 @@
+import sqlite3
 from repositories.CovidDataRepository import CovidDataRepository
 from repositories.MinistryDataRepository import MinistryDataRepository
-from sqlalchemy import engine as alchemyEngine
-from sqlalchemy.pool import StaticPool
-from sqlalchemy.sql import text
 import schedule
-import logging
 import time
+from repositories.VaccinationDataRepository import VaccinationDataRepository
 
 from usecases.CovidUseCase import CovidUseCase
+from usecases.VaccinationUseCase import VaccinationUseCase
 
 # DATABASE SYNC SCHEDULER ENTRY POINT
 # create db object
-db = alchemyEngine.create_engine('sqlite:///covid_database.db', poolclass=StaticPool)
 
 def runSync():
-    repo = CovidDataRepository(db.connect())
+    db = sqlite3.connect('covid_database.db', isolation_level=None, check_same_thread=False)
+
+
     ministryRepo = MinistryDataRepository()
-    app = CovidUseCase(repo, ministryRepo)
-    err = app.syncDataWithApiSource()
+
+    # scnc covid data
+    covidRepo = CovidDataRepository(db)
+    covid = CovidUseCase(covidRepo, ministryRepo)
+    err = covid.syncDataWithApiSource()
+
+    # scnc vaccination data
+    vaccRepo = VaccinationDataRepository(db)
+    vacc = VaccinationUseCase(vaccRepo, ministryRepo)
+    err = vacc.syncDataWithApiSource()
+
     if err == None:
         print("Sync Success...")
     else:

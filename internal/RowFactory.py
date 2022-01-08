@@ -1,4 +1,5 @@
 from entites.covid_data_entity import DailyCase, TotalCase, YearlyCase, MonthlyCase
+from entites.vaccination_data_entity import DailyVaccinationData, MonthlyVaccinationData, TotalVaccinationData, YearlyVaccinationData
 class RowFactory():
 
 
@@ -64,7 +65,7 @@ class RowFactory():
                     active=row[4]
                 )
 
-                
+
     def DailyCaseRowFactory(self, cursor, row):
         """
         Sqlite row factory transfrom query result to MonthlyCase class object
@@ -83,3 +84,71 @@ class RowFactory():
                     death=row[3],
                     active=row[4]
                 )
+
+    def TotalVaccinationRowFactory(self, cursor, row):
+        """
+        Sqlite row factory transfrom query result to TotalVaccination class object
+
+                Parameters:
+                        cursor (sqlite3.Cursor): sqlite cursor
+                        row : row result tuple
+
+                Returns:
+                        (Total): TotalVaccination class object
+        """
+        return TotalVaccinationData(
+                    first_vacc=row[0],
+                    second_vacc=row[1]
+                )
+
+    def YearlyVaccinationRowFactory(self, cursor, row):
+        """
+        Sqlite row factory transfrom query result to YearlyVaccination class object
+
+                Parameters:
+                        cursor (sqlite3.Cursor): sqlite cursor
+                        row : row result tuple
+
+                Returns:
+                        (DailyCase): YearlyVaccination class object
+        """
+        return YearlyVaccinationData(
+                    year=row[0],
+                    first_vacc=row[1],
+                    second_vacc=row[2]
+                )
+
+    def MonthlyVaccinationRowFactory(self, cursor, row):
+        """
+        Sqlite row factory transfrom query result to YearlyVaccination class object
+
+                Parameters:
+                        cursor (sqlite3.Cursor): sqlite cursor
+                        row : row result tuple
+
+                Returns:
+                        (MonthlyVaccinationData): YearlyVaccination class object
+        """
+        return MonthlyVaccinationData(
+                    month=row[0],
+                    first_vacc=row[1],
+                    second_vacc=row[2]
+                )
+
+    def DailyVaccinationRowFactory(self, cursor, row):
+        """
+        Sqlite row factory transfrom query result to DailyVaccinationData class object
+
+                Parameters:
+                        cursor (sqlite3.Cursor): sqlite cursor
+                        row : row result tuple
+
+                Returns:
+                        (DailyVaccinationData): DailyVaccinationData class object
+        """
+        return DailyVaccinationData(
+                    date=row[0],
+                    first_vacc=row[1],
+                    second_vacc=row[2]
+                )
+

@@ -1,68 +1,67 @@
-from entites.covid_data_entity import YearlyCase
 from repositories.MinistryDataRepository import MinistryDataRepository
-from repositories.CovidDataRepository import CovidDataRepository
+from repositories.VaccinationDataRepository import VaccinationDataRepository
 from datetime import datetime
 import time
 from dateutil.relativedelta import relativedelta
 
-class CovidUseCase():
+class VaccinationUseCase():
     """
-    UseCase class hold CovidUseCase.
+    UseData class hold VaccinationUseCase.
     this class returning defined entity
     and represent as App Level API
 
     Attributes
     ----------
-    covidRepository : CovidDataRepository
+    vaccRepository : VaccinationDataRepository
         local database repository object (act like cache)
     ministryRepository : MinistryDataRepository
         source data repository object
     """
-    def __init__(self, covidRepository: CovidDataRepository, ministryRepository: MinistryDataRepository = None):
+    def __init__(self, vaccRepository: VaccinationDataRepository, ministryRepository: MinistryDataRepository = None):
         # init repository deps
-        self._covidRepository = covidRepository
+        self._vaccRepository = vaccRepository
         self._ministryRepository = ministryRepository
 
 
     def getGeneralInformation(self):
         """
-        Entry point, provide general information of covid cases.
+        Entry point, provide general information of covid Datas.
 
                 Returns:
-                        (TotalCase): TotalCase class object, contain total case and last case
+                        (Total): Total class object, contain total Data and last data
                         (error): return error
         """
         # get data from repository
-        data, err = self._covidRepository.getLastUpdateSummary()
+        data, err = self._vaccRepository.getLastUpdateSummary()
         return data, err
 
 
-    def getYearlyCasesList(self, since: int = 2020, upto: int = datetime.now().year):
-        """Provide yearly data of total covid cases. by default between starting case (2020) until current year
+    def getYearlyDatasList(self, since: int = 2020, upto: int = datetime.now().year):
+        """Provide yearly data of total covid Datas. by default between starting Data (2020) until current year
 
             Parameters:
                         since (int): parameter to control since when (year) the data will be returned, default 2020 if empty
                         upto (int): parameter to control up to when (year) the data will be returned, by default up to the current year if empty
             Returns:
-                        (list[YearlyCase]): yearly case result data
+                        (list[YearlyVaccinationData]): yearly Data result data
                         (error): return error
         """
         # get data from repository
-        yearlyResult, err = self._covidRepository.getYearlyCases(since, upto)
+        yearlyResult, err = self._vaccRepository.getYearlyData(since, upto)
         return yearlyResult, err
 
 
-    def getCaseByYear(self, year: int):
-        """Provide case by year
+    def getDataByYear(self, year: int):
+        """Provide Data by year
 
             Parameters:
                         year (int): year
             Returns:
-                        (YearlyCase): yearly case result data
+                        (YearlyVaccinationData): yearly Data result data
                         (error): return error
         """
         # get data from repository
-        result, err = self._covidRepository.getCaseByYear(year)
+        result, err = self._vaccRepository.getDataByYear(year)
         return result, err
 
 
@@ -77,23 +76,23 @@ class CovidUseCase():
             return "You need MinistryDataRepository Dependency"
 
         # get source data from ministry repository api
-        sourceData, err = self._ministryRepository.getDailyCases()
+        sourceData, _,  err = self._ministryRepository.getDailyTestAndVaccinationData()
         if err != None:
             return err
         else:
             # if no error update data
-            self._covidRepository.truncateData()
-            self._covidRepository.bulkInsertDailyCaseData(sourceData)
+            self._vaccRepository.truncateData()
+            self._vaccRepository.bulkInsertDailyData(sourceData)
 
 
-    def getMonthlyCase(self, since: str = '2020.01', upto: str = datetime.utcfromtimestamp(time.time()).strftime("%Y.%m")):
-        """Provide case monthly if empty return all monthly data
+    def getMonthlyData(self, since: str = '2020.01', upto: str = datetime.utcfromtimestamp(time.time()).strftime("%Y.%m")):
+        """Provide Data monthly if empty return all monthly data
 
             Parameters:
                         since (str): since month with format %Y.%m (eg. 2021.01)
                         upto (str): upto month with format %Y.%m (eg. 2021.01)
             Returns:
-                        (MonthlyCases): yearly case result data
+                        (MonthlyDatas): yearly Data result data
                         (error): return error
         """
         # validate since and upto match %Y.%m
@@ -103,21 +102,21 @@ class CovidUseCase():
             uptoTimeStamp = time.mktime((datetime.strptime(upto, "%Y.%m") + relativedelta(months=1)).timetuple())
 
             # get data from repository
-            result, err = self._covidRepository.getMonthlyData(sinceTimeStamp, uptoTimeStamp)
+            result, err = self._vaccRepository.getMonthlyData(sinceTimeStamp, uptoTimeStamp)
             return result, err
 
         except ValueError as e:
             return None, e
 
 
-    def getDailyCase(self, since: str = '2020.01.01', upto: str = datetime.utcfromtimestamp(time.time()).strftime("%Y.%m.%d")):
-        """Provide case monthly if empty return all daily data
+    def getDailyData(self, since: str = '2020.01.01', upto: str = datetime.utcfromtimestamp(time.time()).strftime("%Y.%m.%d")):
+        """Provide Data monthly if empty return all daily data
 
             Parameters:
                         since (str): since month with format %Y.%m.%d (eg. 2021.01.01)
                         upto (str): upto month with format %Y.%m.%d (eg. 2021.01.01)
             Returns:
-                        (DailyCase): yearly case result data
+                        (DailyData): yearly Data result data
                         (error): return error
         """
         # validate since and upto match %Y.%m
@@ -127,7 +126,7 @@ class CovidUseCase():
             uptoTimeStamp = time.mktime((datetime.strptime(upto, "%Y.%m.%d") + relativedelta(days=1)).timetuple())
 
             # get data from repository
-            result, err = self._covidRepository.getDailyData(sinceTimeStamp, uptoTimeStamp)
+            result, err = self._vaccRepository.getDailyData(sinceTimeStamp, uptoTimeStamp)
             return result, err
 
         except ValueError as e:

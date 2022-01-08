@@ -4,14 +4,14 @@ import logging
 from flask import Flask, Response, request
 from entites.BaseEntity import BaseApiResponse
 from validation.http_api_validation import isValidationError, validateIsNumber, validateIsmatchDateFormat, validationErrMessage
-from usecases.CovidUseCase import CovidUseCase
+from usecases.VaccinationUseCase import VaccinationUseCase
 import time
 
 # TODO: CLEANUP REFACTOR this class
-class CovidApiHandler():
-    def __init__(self, flaskApp: Flask, covidUseCase: CovidUseCase):
+class VaccinationApiHandler():
+    def __init__(self, flaskApp: Flask, vaccUseCase: VaccinationUseCase):
         self.http = flaskApp
-        self.useCase = covidUseCase # init usecase deps
+        self.useCase = vaccUseCase # init usecase deps
         self.logger = logging.getLogger('root') # get root logger
 
 
@@ -86,7 +86,7 @@ class CovidApiHandler():
             )
 
         # process use case
-        result, err = self.useCase.getYearlyCasesList(int(since), int(upto))
+        result, err = self.useCase.getYearlyDatasList(int(since), int(upto))
         if err != None:
             self.logger.error(err)
             # return server error json
@@ -117,7 +117,7 @@ class CovidApiHandler():
             )
 
         # process use case
-        result, err = self.useCase.getCaseByYear(year)
+        result, err = self.useCase.getDataByYear(year)
         if err != None:
             self.logger.error(err)
             # return server error json
@@ -161,7 +161,7 @@ class CovidApiHandler():
             )
 
         # process use case
-        result, err = self.useCase.getMonthlyCase(since, upto)
+        result, err = self.useCase.getMonthlyData(since, upto)
         if err != None:
             self.logger.error(err)
             # return not found
@@ -207,7 +207,7 @@ class CovidApiHandler():
             )
 
         # process use case
-        result, err = self.useCase.getMonthlyCase(since, upto)
+        result, err = self.useCase.getMonthlyData(since, upto)
         if err != None:
             self.logger.error(err)
             # return server error
@@ -242,7 +242,7 @@ class CovidApiHandler():
             )
 
         # process use case
-        result, err = self.useCase.getMonthlyCase('{}.{}'.format(year, month), '{}.{}'.format(year, month))
+        result, err = self.useCase.getMonthlyData('{}.{}'.format(year, month), '{}.{}'.format(year, month))
         if err != None:
             self.logger.error(err)
             return Response(
@@ -252,7 +252,7 @@ class CovidApiHandler():
             )
 
         if len(result) == 0:
-                # return not found
+            # return not found
             return self.notFoundResponse()
 
         # return success response
@@ -287,7 +287,7 @@ class CovidApiHandler():
             )
 
         # process use case
-        result, err = self.useCase.getDailyCase(since, upto)
+        result, err = self.useCase.getDailyData(since, upto)
         if err != None:
             self.logger.error(err)
             return self.serverErrorResponse()
@@ -331,7 +331,7 @@ class CovidApiHandler():
             )
 
         # process use case
-        result, err = self.useCase.getDailyCase(since, upto)
+        result, err = self.useCase.getDailyData(since, upto)
         if err != None:
             self.logger.error(err)
             # retuen server error
@@ -394,7 +394,7 @@ class CovidApiHandler():
             )
 
         # process use case
-        result, err = self.useCase.getDailyCase(since, upto)
+        result, err = self.useCase.getDailyData(since, upto)
         if err != None:
             self.logger.error(err)
             # return server error
@@ -431,7 +431,7 @@ class CovidApiHandler():
             )
 
         # process use case
-        result, err = self.useCase.getDailyCase('{}.{}.{}'.format(year, month, date), '{}.{}.{}'.format(year, month, date))
+        result, err = self.useCase.getDailyData('{}.{}.{}'.format(year, month, date), '{}.{}.{}'.format(year, month, date))
 
         if err != None:
             self.logger.error(err)
@@ -439,9 +439,10 @@ class CovidApiHandler():
             return self.serverErrorResponse()
 
         if len(result) == 0:
-            # return not found
+                # return not found
             return self.notFoundResponse()
 
+        # return success response
         return Response(
             BaseApiResponse(ok=True, data=result[0], message='success').to_json(),
             status=200,
@@ -450,42 +451,42 @@ class CovidApiHandler():
 
 
     def route(self):
-        @self.http.route('/', methods=['GET'])
-        def _getGeneralInformation():
+        @self.http.route('/vaccination', methods=['GET'])
+        def _getGeneralInformationVaccination():
             return self.getGeneralInformation()
 
-        @self.http.route('/yearly', methods=['GET'])
-        def _getYearlyData():
+        @self.http.route('/vaccination/yearly', methods=['GET'])
+        def _getYearlyDataVaccination():
             return self.getYearlyData()
 
-        @self.http.route('/yearly/<year>')
-        def _getDataByYear(year):
+        @self.http.route('/vaccination/yearly/<year>')
+        def _getDataByYearVaccination(year):
             return self.getDataByYear(year)
 
-        @self.http.route('/monthly', methods=['GET'])
-        def _getMonthlyData():
+        @self.http.route('/vaccination/monthly', methods=['GET'])
+        def _getMonthlyDataVaccination():
             return self.getMonthlyData()
 
-        @self.http.route('/monthly/<year>', methods=['GET'])
-        def _getMonthlyDataByYear(year):
+        @self.http.route('/vaccination/monthly/<year>', methods=['GET'])
+        def _getMonthlyDataByYearVaccination(year):
             return self.getMonthlyDataByYear(year)
 
-        @self.http.route('/monthly/<year>/<month>', methods=['GET'])
-        def _getMonthlyDataByYearMonth(year, month):
+        @self.http.route('/vaccination/monthly/<year>/<month>', methods=['GET'])
+        def _getMonthlyDataByYearMonthVaccination(year, month):
             return self.getMonthlyDataByYearMonth(year, month)
 
-        @self.http.route('/daily', methods=['GET'])
-        def _getDailyData():
+        @self.http.route('/vaccination/daily', methods=['GET'])
+        def _getDailyDataVaccination():
             return self.getDailyData()
 
-        @self.http.route('/daily/<year>', methods=['GET'])
-        def _getDailyDataByYear(year):
+        @self.http.route('/vaccination/daily/<year>', methods=['GET'])
+        def _getDailyDataByYearVaccination(year):
             return self.getDailyDataByYear(year)
 
-        @self.http.route('/daily/<year>/<month>', methods=['GET'])
-        def _getDailyDataInYearMonth(year, month):
+        @self.http.route('/vaccination/daily/<year>/<month>', methods=['GET'])
+        def _getDailyDataInYearMonthVaccination(year, month):
             return self.getDailyDataInYearMonth(year, month)
 
-        @self.http.route('/daily/<year>/<month>/<date>', methods=['GET'])
-        def _getDailyDataByDate(year, month, date):
+        @self.http.route('/vaccination/daily/<year>/<month>/<date>', methods=['GET'])
+        def _getDailyDataByDateVaccination(year, month, date):
             return self.getDailyDataByDate(year, month, date)

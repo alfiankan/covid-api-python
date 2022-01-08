@@ -1,13 +1,13 @@
 import sqlite3
 from typing import List
 from pypika import Query
-from entites.covid_data_entity import DailyCase, MonthlyCase, TotalCase, YearlyCase
+from entites.vaccination_data_entity import DailyVaccinationData, MonthlyVaccinationData, TotalVaccinationData, YearlyVaccinationData
 
 from internal.RowFactory import RowFactory
 
-class CovidDataRepository():
+class VaccinationDataRepository():
     """
-    Repository class hold data source.
+    Repository class hold data vaccination.
 
     Attributes
     ----------
@@ -16,32 +16,28 @@ class CovidDataRepository():
     """
     def __init__(self, db: sqlite3.Connection):
         self._db = db
-        self._tableName = 'covid_cases'
+        self._tableName = 'vaccination'
         self._rowFactory = RowFactory()
 
 
     def getLastUpdateSummary(self):
         """
-        get last updated data, latest covid case in date, and total all data
+        get last updated data, latest vaccination in date, and total all data
 
                 Returns:
-                        (TotalCase): last updated data, and total cases
+                        (Total): last updated data, and total
                         (error): query error return None if has no error
         """
         try:
             stmt = """SELECT
-                        SUM(positive),
-                        SUM(recovered),
-                        SUM(death),
-                        SUM(active),
-                        (SELECT positive FROM {0} ORDER BY key DESC LIMIT 1),
-                        (SELECT recovered FROM {0} ORDER BY key DESC LIMIT 1),
-                        (SELECT death FROM {0} ORDER BY key DESC LIMIT 1),
-                        (SELECT active FROM {0} ORDER BY key DESC LIMIT 1)
+                        SUM(first_vacc),
+                        SUM(second_vacc),
+                        (SELECT first_vacc FROM {0} ORDER BY key DESC LIMIT 1),
+                        (SELECT second_vacc FROM {0} ORDER BY key DESC LIMIT 1)
                         FROM {0}""".format(self._tableName)
 
-            self._db.row_factory = self._rowFactory.TotalCaseRowFactory
-            result: TotalCase = self._db.cursor().execute(stmt).fetchone()
+            self._db.row_factory = self._rowFactory.TotalVaccinationRowFactory
+            result: TotalVaccinationData = self._db.cursor().execute(stmt).fetchone()
             return result, None
 
         except Exception as e:
@@ -66,12 +62,12 @@ class CovidDataRepository():
             return e
 
 
-    def bulkInsertDailyCaseData(self, data: List[DailyCase]):
+    def bulkInsertDailyData(self, data: List[DailyVaccinationData]):
         """
-        bulk Inserting covid case data
+        bulk Inserting vaccination data
 
                 Parameters:
-                        data (ListDailyCase]): daily cases data
+                        data (ListDailyData]): dailys data
 
                 Returns:
                         (error): sqlite error query return None if has no error
@@ -80,7 +76,7 @@ class CovidDataRepository():
             # build query statement for bulk insert
             stmt = Query.Table(self._tableName)
             for row in data:
-                stmt = stmt.insert((row.date, row.positive, row.recovered, row.death, row.active))
+                stmt = stmt.insert((row.date, row.first_vacc, row.second_vacc))
 
             #  insert
             self._db.execute(str(stmt))
@@ -92,7 +88,7 @@ class CovidDataRepository():
 
 
 
-    def getYearlyCases(self, since: int, upto: int):
+    def getYearlyData(self, since: int, upto: int):
         """
         get data  yearly, with filter ability (since, upto), default is returning all yearly data
 
@@ -101,24 +97,22 @@ class CovidDataRepository():
                         upto (int): filter year end
 
                 Returns:
-                         (List[YearlyCase]): yearly case list result
+                         (List[YearlyVaccinationData]): yearly list result
                          (error): query error return None if has no error
         """
         try:
             stmt = """SELECT
                         strftime('%Y',datetime(key, 'unixepoch')) AS year,
-                        SUM(positive),
-                        SUM(recovered),
-                        SUM(death),
-                        SUM(active)
+                        SUM(first_vacc),
+                        SUM(second_vacc)
                         FROM {}
                         WHERE CAST(year as desimal) BETWEEN ? AND ?
                         GROUP BY year""".format(self._tableName)
 
-            self._db.row_factory = self._rowFactory.YearlyCaseRowFactory
+            self._db.row_factory = self._rowFactory.YearlyVaccinationRowFactory
             result = self._db.cursor().execute(stmt, (since, upto))
 
-            dbResult: List[YearlyCase] = list(result)
+            dbResult: List[YearlyVaccinationData] = list(result)
             return dbResult, None
 
         except Exception as e:
@@ -126,30 +120,28 @@ class CovidDataRepository():
             return [], e
 
 
-    def getCaseByYear(self, year: int):
+    def getDataByYear(self, year: int):
         """
-        get cases data by year,
+        gets data by year,
 
                 Parameters:
                         year (int): year
 
                 Returns:
-                         (YearlyCase): yearly case result
+                         (YearlyVaccinationData): yearly result
                          (error): query error return None if has no error
         """
         try:
             stmt = """SELECT
                         strftime('%Y',datetime(key, 'unixepoch')) AS year,
-                        SUM(positive),
-                        SUM(recovered),
-                        SUM(death),
-                        SUM(active)
+                        SUM(first_vacc),
+                        SUM(second_vacc)
                         FROM {}
                         WHERE CAST(year as desimal) = ?
                         GROUP BY year""".format(self._tableName)
 
-            self._db.row_factory = self._rowFactory.YearlyCaseRowFactory
-            result: YearlyCase = self._db.cursor().execute(stmt, (year,)).fetchone()
+            self._db.row_factory = self._rowFactory.YearlyVaccinationRowFactory
+            result: YearlyVaccinationData = self._db.cursor().execute(stmt, (year,)).fetchone()
 
             return result, None
 
@@ -160,27 +152,25 @@ class CovidDataRepository():
 
     def getMonthlyData(self, since: float, upto: float):
         """
-        get cases data monthly
+        gets data monthly
                 Parameters:
                         since (timestamp unix): filter  start
                         upto (timestamp unix): filter  end
                 Returns:
-                         (MonthlyCase): MonthlyCase case result
+                         (MonthlyVaccinationData): MonthlyVaccinationData result
                          (error): query error return None if has no error
         """
         try:
             stmt = """SELECT
                         strftime('%Y-%m',datetime(key, 'unixepoch')) AS month,
-                        SUM(positive),
-                        SUM(recovered),
-                        SUM(death),
-                        SUM(active)
+                        SUM(first_vacc),
+                        SUM(second_vacc)
                         FROM {}
                         WHERE key BETWEEN ? AND ?
                         GROUP BY month""".format(self._tableName)
 
-            self._db.row_factory = self._rowFactory.MonthlyCaseRowFactory
-            result: list[MonthlyCase] = list(self._db.cursor().execute(stmt, (since, upto,)))
+            self._db.row_factory = self._rowFactory.MonthlyVaccinationRowFactory
+            result: list[MonthlyVaccinationData] = list(self._db.cursor().execute(stmt, (since, upto,)))
 
             return result, None
 
@@ -191,26 +181,24 @@ class CovidDataRepository():
 
     def getDailyData(self, since: float, upto: float):
         """
-        get cases data daily
+        gets data daily
                 Parameters:
                         since (timestamp unix): filter  start
                         upto (timestamp unix): filter  end
                 Returns:
-                         (DailyCase): MonthlyCase case result
+                         (DailyVaccinationData): MonthlyData result
                          (error): query error return None if has no error
         """
         try:
             stmt = """SELECT
                         strftime('%Y-%m-%d',datetime(key, 'unixepoch')) AS date,
-                        positive,
-                        recovered,
-                        death,
-                        active
+                        first_vacc,
+                        second_vacc
                         FROM {}
                         WHERE key BETWEEN ? AND ?""".format(self._tableName)
 
-            self._db.row_factory = self._rowFactory.DailyCaseRowFactory
-            result: list[DailyCase] = list(self._db.cursor().execute(stmt, (since, upto,)))
+            self._db.row_factory = self._rowFactory.DailyVaccinationRowFactory
+            result: list[DailyVaccinationData] = list(self._db.cursor().execute(stmt, (since, upto,)))
 
             return result, None
 
