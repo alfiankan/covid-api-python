@@ -42,7 +42,8 @@
   4. To sync with source data run `make syncdata`
   5. To run development server run `make dev`
   6. To run production server run `export PORT=<HOST_PORT> && make start`
-  7. To build as docker image run `docker build -t <imagename>:<tag> .`
+  7. To run production server with defined gunicorn worker run `export PORT=<HOST_PORT> && export WORKERS=--workers=<NUMBER_OF_WORKER> && make start`
+  8. To build as docker image run `docker build -t <imagename>:<tag> .`
 
 
 <a name="4"></a>
