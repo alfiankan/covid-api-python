@@ -206,10 +206,10 @@ class CovidTestDataRepository():
                         antigen_specimen,
                         antigen,
                         pcr_tcm
-                        FROM {}""".format(self._tableName)
+                        FROM {} WHERE key BETWEEN ? AND ?""".format(self._tableName)
 
             self._db.row_factory = self._rowFactory.DailyCovidTestDataRowFactory
-            result: list[DailyCovidTestData] = list(self._db.cursor().execute(stmt))
+            result: list[DailyCovidTestData] = list(self._db.cursor().execute(stmt, (since, upto)))
 
             return result, None
 
