@@ -6,3 +6,4 @@ pypika
 requests
 python-dateutil
 schedule
+gunicorn

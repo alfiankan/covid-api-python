@@ -34,6 +34,7 @@ jobs:
     - name: Test with pytest
       run: |
         pytest ./tests
+<<<<<<< HEAD
         
     - name: Build Docker Image
       id: buildAndPushImage
@@ -48,3 +49,5 @@ jobs:
     - name: Get pre step result output image_pull_url
       run: echo "The time was ${{ steps.buildAndPushImage.outputs.image_pull_url }}"
 
+=======
+>>>>>>> 7182108 ((core) -> make health checking if main app not runnning exit scheduler)

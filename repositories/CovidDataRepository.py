@@ -1,3 +1,4 @@
+import logging
 import sqlite3
 from typing import List
 from pypika import Query
@@ -19,6 +20,7 @@ class CovidDataRepository():
         self._db = db
         self._tableName = 'covid_cases'
         self._rowFactory = RowFactory()
+        self.logger = logging.getLogger('root')
 
     def getLastUpdateSummary(self):
         """
@@ -45,6 +47,7 @@ class CovidDataRepository():
             return result, None
 
         except Exception as e:
+            self.logger.error(e)
             return None, e
 
     def truncateData(self):
@@ -62,6 +65,7 @@ class CovidDataRepository():
 
         except Exception as e:
             # catch error
+            self.logger.error(e)
             return e
 
     def bulkInsertDailyCaseData(self, data: List[DailyCase]):
@@ -86,6 +90,7 @@ class CovidDataRepository():
 
         except Exception as e:
             # catch error
+            self.logger.error(e)
             return e
 
     def getYearlyCases(self, since: int, upto: int):
@@ -119,6 +124,7 @@ class CovidDataRepository():
 
         except Exception as e:
             # catch error
+            self.logger.error(e)
             return [], e
 
     def getCaseByYear(self, year: int):
@@ -150,6 +156,7 @@ class CovidDataRepository():
 
         except Exception as e:
             # catch error
+            self.logger.error(e)
             return [], e
 
     def getMonthlyData(self, since: float, upto: float):
@@ -180,6 +187,7 @@ class CovidDataRepository():
 
         except Exception as e:
             # catch error
+            self.logger.error(e)
             return [], e
 
     def getDailyData(self, since: float, upto: float):
@@ -209,4 +217,5 @@ class CovidDataRepository():
 
         except Exception as e:
             # catch error
+            self.logger.error(e)
             return [], e

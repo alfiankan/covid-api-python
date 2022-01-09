@@ -3,8 +3,8 @@ test:
 cover:
 	pytest --cov
 dev:
-	python3 api.py
-run:
-	gunicorn --bind localhost:3000 wsgi:startApi && python3 sync_scheduler.py
+	export FLASK_ENV=development && python3 api.py
+start:
+	python3 sync_scheduler.py & export FLASK_ENV=production && gunicorn --bind 0.0.0.0:3000 api:app --access-logfile logs/access.log --capture-output
 install:
 	python3 -m pip install -r requirements.txt

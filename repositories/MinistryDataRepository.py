@@ -1,3 +1,4 @@
+import logging
 from typing import List
 import requests
 from entites.covid_data_entity import DailyCase
@@ -13,6 +14,7 @@ class MinistryDataRepository():
     def __init__(self):
         # request connection timeout
         self._requestTimeOut = 30 #second
+        self.logger = logging.getLogger('root')
 
     def getDailyTestAndVaccinationData(self):
         """get source data public api
@@ -53,6 +55,7 @@ class MinistryDataRepository():
 
         except Exception as e:
             # catch error
+            self.logger.error(e)
             return [], [], e
 
 
@@ -82,4 +85,5 @@ class MinistryDataRepository():
 
         except Exception as e:
             # catch error
+            self.logger.error(e)
             return [], e
