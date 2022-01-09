@@ -4,7 +4,12 @@
 name: Build Push Docker Image
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      imagetag:
+        description: 'Docker Image tag'
+        required: true
+        default: 'lastest'
 jobs:
   build:
 
@@ -40,7 +45,7 @@ jobs:
           repository_name: 'alfiantech/indonesia-covid-api'
           user_name: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          image_version: ${{GITHUB_REF#refs/tags/}}
+          image_version: ${{ github.event.inputs.imagetag }}
           docker_file: '.'
     - name: Get pre step result output image_pull_url
       run: echo "The time was ${{ steps.buildAndPushImage.outputs.image_pull_url }}"
