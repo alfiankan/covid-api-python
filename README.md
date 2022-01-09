@@ -10,7 +10,6 @@
 - [ How to run ](#5)
 - [ Architectural Design ](#6)
 - [ Scheduler ](#7)
-- [ Notes ](#8)
 - [ Data Integrity ](#9)
 - [ Docker Image ](#10)
 - [ Api Docs ](#11)
@@ -156,10 +155,43 @@
       - https://data.covid19.go.id/public/api/ api is not realtime, from my research is update +1, for example: today data will be shown tommorow.
       - if we make a request directly to the public api (user -> app -> public api) will increase latency or my be egress bandwidth, or other things like public api server being spiked (become slow).
       - by syncing for x intervals and storing as local data (or it can be called cache) will provide other benefits like we can use sql script to run data agregation or filtering.
+      - here loadtest result :
+          > load test 1000 request with 10 concurrent
+          
+          > using caching/sync to db (using git branch main) average latency 30.4 ms:
+          
+              ╰─ loadtest "http://localhost:3000/yearly?since=2020&upto=2022" -n 1000 -c 10
+              [Mon Jan 10 2022 00:10:00 GMT+0700 (Western Indonesia Time)] INFO Requests: 0 (0%), requests per second: 0, mean latency: 0 ms
+              [Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO
+              [Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Target URL:          http://localhost:3000/yearly?since=2020&upto=2022
+              [Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Max requests:        1000
+              [Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Concurrency level:   10
+              [Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Agent:               none
+              [Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO
+              [Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Completed requests:  1000
+              [Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Total errors:        0
+              [Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Total time:          3.072043278 s
+              [Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Requests per second: 326
+              [Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Mean latency:        30.4 ms
+
+          > direct request to https://data.covid19.go.id/public/api/  (using git branch old-only-api-request) average latency 516.8 ms:
+              
+              ╰─ loadtest "http://localhost:3000/yearly?since=2020&upto=2022" -n 1000 -c 10
+              [Mon Jan 10 2022 00:15:12 GMT+0700 (Western Indonesia Time)] INFO
+              [Mon Jan 10 2022 00:15:12 GMT+0700 (Western Indonesia Time)] INFO Target URL:          http://localhost:3000/yearly?since=2020&upto=2022
+              [Mon Jan 10 2022 00:15:12 GMT+0700 (Western Indonesia Time)] INFO Max requests:        1000
+              [Mon Jan 10 2022 00:15:12 GMT+0700 (Western Indonesia Time)] INFO Concurrency level:   10
+              [Mon Jan 10 2022 00:15:12 GMT+0700 (Western Indonesia Time)] INFO Agent:               none
+              [Mon Jan 10 2022 00:15:12 GMT+0700 (Western Indonesia Time)] INFO
+              [Mon Jan 10 2022 00:15:12 GMT+0700 (Western Indonesia Time)] INFO Completed requests:  1000
+              [Mon Jan 10 2022 00:15:12 GMT+0700 (Western Indonesia Time)] INFO Total errors:        0
+              [Mon Jan 10 2022 00:15:12 GMT+0700 (Western Indonesia Time)] INFO Total time:          51.955787814000004 s
+              [Mon Jan 10 2022 00:15:12 GMT+0700 (Western Indonesia Time)] INFO Requests per second: 19
+              [Mon Jan 10 2022 00:15:12 GMT+0700 (Western Indonesia Time)] INFO Mean latency:        516.8 ms
+              [Mon Jan 10 2022 00:15:12 GMT+0700 (Western Indonesia Time)] INFO
 
 <a name="8"></a>
-## Note
-    -
+
 
 <a name="9"></a>
 ## Data Integrity
