@@ -4,9 +4,10 @@
 name: Python application
 
 on:
-  create:
-    tags:
-      - v*
+  workflow_run:
+    workflows: ["build_image"]
+    types:
+      - completed
 
 jobs:
   build:
