@@ -1,6 +1,6 @@
 import os
 import sqlite3
-
+import argparse
 import requests
 from repositories.CovidDataRepository import CovidDataRepository
 from repositories.MinistryDataRepository import MinistryDataRepository
@@ -30,7 +30,6 @@ def runScheduler():
     """run job
         sync local daya with source
     """
-    checkMainAppIsRunning()
     db = sqlite3.connect('covid_database.db', isolation_level=None, check_same_thread=False)
     ministryRepo = MinistryDataRepository()
 
@@ -49,14 +48,23 @@ def runScheduler():
     else:
         print(err)
 
+# args to skip scheduler
+skipScheduler = argparse.ArgumentParser(description='Skip long running scheduler')
+skipScheduler.add_argument('--skip', action='store_true')
+args = skipScheduler.parse_args()
 
-checkMainAppIsRunning()
-# run job at first time
-runScheduler()
-print('scheduler running on {}'.format(os.getpid()))
+# if skip
+if args.skip:
+    # run scheduler only once
+    runScheduler()
+else:
+    checkMainAppIsRunning()
+    # run job at first time
+    runScheduler()
+    print('scheduler running on {}'.format(os.getpid()))
 
-# schedule job every 5 hours
-schedule.every(5).hours.do(runScheduler)
-while True:
-  schedule.run_pending()
-  time.sleep(1)
+    # schedule job every 5 hours
+    schedule.every(5).hours.do(runScheduler)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
