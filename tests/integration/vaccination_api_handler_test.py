@@ -1,9 +1,9 @@
-from api import startApi
+from api import app
 import json
 
 
 def createFlaskTestApp():
-    flaskApp = startApi()
+    flaskApp = app
     flaskApp.config["TESTING"] = True
     return flaskApp.test_client()
 
