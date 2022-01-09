@@ -4,11 +4,7 @@
 name: Build Push Docker Image
 
 on:
-  workflow_run:
-    workflows: ["build_image"]
-    types:
-      - completed
-
+  workflow_dispatch
 jobs:
   build:
 
