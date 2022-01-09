@@ -4,8 +4,9 @@
 name: Python application
 
 on:
-	tags:
-		- *
+  create:
+    tags:
+      - v*
 
 jobs:
   build:
