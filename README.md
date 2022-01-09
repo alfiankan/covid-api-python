@@ -17,7 +17,7 @@
 <a name="1"></a>
 ## How to use
   1. Using Deployed App<br>
-     > You can use : covid-api.4japbstp5p7dg.ap-southeast-1.cs.amazonlightsail.com or https://indonesia-covid-api.herokuapp.com <br><br>
+     > You can use : https://covid-api.4japbstp5p7dg.ap-southeast-1.cs.amazonlightsail.com or https://indonesia-covid-api.herokuapp.com <br><br>
      > [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/7847165-0d3be7de-dd45-4183-822c-174b6ef6db3e?action=collection%2Ffork&collection-url=entityId%3D7847165-0d3be7de-dd45-4183-822c-174b6ef6db3e%26entityType%3Dcollection%26workspaceId%3D04cc5d73-b93a-4a0e-ae83-43e1c6e73e6d#?env%5Bnodeflux%5D=W3sia2V5IjoiaG9zdCIsInZhbHVlIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiZW5hYmxlZCI6dHJ1ZX1d)
   2. Build from source
      > Follow this step : [ How to build ](#3)
