@@ -221,9 +221,9 @@ def testGetDailyDataInSpesificYearWithWrongYearQueryParam():
 
 
 def testGetDailySingleDataInSpesificYearMonth():
-    """[POSITIVE] Test Route /test/daily/2021/02 [get daily cases in spesific date]"""
+    """[POSITIVE] Test Route /test/daily/2021/05 [get daily cases in spesific date]"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/test/daily/2021/02')
+    response = testApp.get('/test/daily/2021/05')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     assert response.status_code == 200

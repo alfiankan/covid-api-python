@@ -96,8 +96,8 @@ def testGetMonthlyDataWithRange():
 def testGetDailyData():
     """Positive Test Get daily Data data
     """
-    since = time.mktime(datetime.strptime("2021.02.01", "%Y.%m.%d").timetuple())
-    upto = time.mktime((datetime.strptime("2021.02.20", "%Y.%m.%d") + relativedelta(days=1)).timetuple())
+    since = time.mktime(datetime.strptime("2021.05.01", "%Y.%m.%d").timetuple())
+    upto = time.mktime((datetime.strptime("2021.05.20", "%Y.%m.%d") + relativedelta(days=1)).timetuple())
     repo = _repository()
     res, err = repo.getDailyData(since, upto)
     print(res)
