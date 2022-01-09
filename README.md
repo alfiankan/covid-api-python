@@ -9,41 +9,143 @@
 - [ How to test ](#4)
 - [ How to run ](#5)
 - [ Architectural Design ](#6)
-- [ Stack ](#7)
+- [ Src ](#7)
 - [ Data Integrity ](#8)
 - [ Docker Image ](#9)
 - [ Api Docs ](#10)
 
-
-## How to use 
 <a name="1"></a>
+## How to use
+  1. Using Deployed App
+     > You can use : https://indonesia-covid-api.herokuapp.com
+  2. Build from source
+     > Follow this step : [ How to build ](#3)
+  3. Using prebuilt Docker image
+      ```
+      docker container run -p 3000:3000 alfiantech/indonesia-covid-api:lastest
+      ```
 
-## Requirements 
 <a name="2"></a>
+## Requirements 
+  - make
+  - install python required package using : 
+    ```
+    make install
+    ```
 
-## How to build &nbsp;&nbsp;🔨
 <a name="3"></a>
+## How to build &nbsp;&nbsp;🔨
+  1. Make sure all requirements already installed
+  2. To install predefined python package use `make install`
+  4. To sync with source data run `make syncdata`
+  5. To run development server run `make dev`
+  6. To run production server run `export PORT=3000 && make start`
+  7. To build as docker image run `docker build -t <imagename>:<tag> .`
 
-## How to test &nbsp;&nbsp; 🧪
+
 <a name="4"></a>
+## How to test &nbsp;&nbsp; 🧪
+  - Verbose testing run `make test`
+      > output :
+      
+        tests/unit/database_test.py::testSqliteConnection PASSED                                          [ 88%]
+        tests/unit/ministry_repository_test.py::testGetDailyCaseData PASSED                               [ 89%]
+        tests/unit/ministry_repository_test.py::testGetDailyVaccinationData PASSED                        [ 91%]
+        tests/unit/playground_test.py::testTime PASSED                                                    [ 92%]
+        tests/unit/validator_test.py::testIsTypeValid PASSED                                              [ 93%]
+        tests/unit/validator_test.py::testIsEmpty PASSED                                                  [ 94%]
+        tests/unit/validator_test.py::testValidateIsNumber PASSED                                         [ 96%]
+        tests/unit/validator_test.py::testValidationErrMessage PASSED                                     [ 97%]
+        tests/unit/validator_test.py::testIsValidationError PASSED                                        [ 98%]
+        tests/unit/validator_test.py::testValidateDateInput PASSED                                        [100%]
+        
+  - Coverage test run `make cover`
+      > Output :
+      
+                  ---------- coverage: platform darwin, python 3.9.7-final-0 -----------
+        Name                                                                                Stmts   Miss  Cover
+        -------------------------------------------------------------------------------------------------------
+        /Users/alfiankan/Library/Python/3.9/lib/python/site-packages/greenlet/__init__.py      19      2    89%
+        api.py                                                                                 30      2    93%
+        entites/BaseEntity.py                                                                   9      0   100%
+        entites/__init__.py                                                                     0      0   100%
+        entites/covid_data_entity.py                                                           38      0   100%
+        entites/covid_testing_data_entity.py                                                   11      0   100%
+        entites/vaccination_data_entity.py                                                     26      0   100%
+        handlers/CovidApiHandler.py                                                           178     48    73%
+        handlers/VaccinationApiHandler.py                                                     178     38    79%
+        handlers/__init__.py                                                                    0      0   100%
+        internal/RowFactory.py                                                                 19      0   100%
+        internal/__init__.py                                                                    0      0   100%
+        repositories/CovidDataRepository.py                                                    76     18    76%
+        repositories/MinistryDataRepository.py                                                 36      6    83%
+        repositories/VaccinationDataRepository.py                                              76     18    76%
+        repositories/__init__.py                                                                0      0   100%
+        tests/__init__.py                                                                       0      0   100%
+        tests/integration/__init__.py                                                           0      0   100%
+        tests/integration/covid_api_handler_test.py                                           200     16    92%
+        tests/integration/covid_repository_test.py                                             66      0   100%
+        tests/integration/covid_usecase_test.py                                                37      0   100%
+        tests/integration/vaccination_api_handler_test.py                                     197      0   100%
+        tests/integration/vaccination_repository_test.py                                       65      0   100%
+        tests/integration/vaccination_usecase_test.py                                          37      0   100%
+        tests/unit/__init__.py                                                                  0      0   100%
+        tests/unit/database_test.py                                                             4      0   100%
+        tests/unit/ministry_repository_test.py                                                 21      0   100%
+        tests/unit/playground_test.py                                                          11      0   100%
+        tests/unit/validator_test.py                                                           25      0   100%
+        usecases/CovidUseCase.py                                                               43     11    74%
+        usecases/VaccinationUseCase.py                                                         42     11    74%
+        validation/__init__.py                                                                  0      0   100%
+        validation/http_api_validation.py                                                      29      2    93%
+        -------------------------------------------------------------------------------------------------------
+        TOTAL                                                                                1473    172    88%
 
-## How to run &nbsp;&nbsp; ⚙️
+
+        ========================================== 78 passed in 3.98s ===========================================
+
 <a name="5"></a>
+## How to run &nbsp;&nbsp; ⚙️
+  - To run development server run `make dev`
+        > output
+      ```
+      ╰─ make dev
+      export FLASK_ENV=development && python3 api.py
+      * Serving Flask app 'api' (lazy loading)
+      * Environment: development
+      * Debug mode: on
+      werkzeug - INFO -  * Running on http://127.0.0.1:3000/ (Press CTRL+C to quit)
+      werkzeug - INFO -  * Restarting with stat
+      werkzeug - WARNING -  * Debugger is active!
+      werkzeug - INFO -  * Debugger PIN: 639-723-256
+      ```
+  - To run production server run `make start`
+      > output
+      ```
+      ╰─ export PORT=3000 && make start
+        python3 sync_scheduler.py & export FLASK_ENV=production && gunicorn --bind 0.0.0.0:3000 api:app --access-logfile logs/access.log --capture-output
+        [2022-01-09 15:25:08 +0700] [31407] [INFO] Starting gunicorn 20.1.0
+        [2022-01-09 15:25:08 +0700] [31407] [INFO] Listening at: http://0.0.0.0:3000 (31407)
+        [2022-01-09 15:25:08 +0700] [31407] [INFO] Using worker: sync
+        [2022-01-09 15:25:08 +0700] [31408] [INFO] Booting worker with pid: 31408
+      ```
+  - To run as docker container `docker container run -p 3000:3000 alfiantech/indonesia-covid-api:lastest`
 
-## Architectural Design
 <a name="6"></a>
+## Architectural Design
 
-## Stack
 <a name="7"></a>
+## Src
 
-## Data Integrity
 <a name="8"></a>
+## Data Integrity
 
-## Docker Image
 <a name="9"></a>
+## Docker Image
 
-## Api Docs
 <a name="10"></a>
+## Api Docs
+
 
 
 
