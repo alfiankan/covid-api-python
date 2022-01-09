@@ -1,4 +1,4 @@
-
+[![Build & Test](https://github.com/alfiankan/covid-api-python/actions/workflows/python-app.yml/badge.svg)](https://github.com/alfiankan/covid-api-python/actions/workflows/python-app.yml)  &nbsp;&nbsp; [![Docker Hub Image](https://github.com/alfiankan/covid-api-python/actions/workflows/build-image.yml/badge.svg)](https://github.com/alfiankan/covid-api-python/actions/workflows/build-image.yml) &nbsp;&nbsp; [![Deploy to Heroku.](https://github.com/alfiankan/covid-api-python/actions/workflows/heroku.yml/badge.svg)](https://github.com/alfiankan/covid-api-python/actions/workflows/heroku.yml)
 
 
 ## Todo :
