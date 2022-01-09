@@ -1,6 +1,6 @@
 from entites.covid_data_entity import DailyCase, TotalCase, YearlyCase, MonthlyCase
 from entites.vaccination_data_entity import DailyVaccinationData, MonthlyVaccinationData, TotalVaccinationData, YearlyVaccinationData
-
+from entites.covid_testing_data_entity import DailyCovidTestData, MonthlyCovidTestData, TotalCovidTestData, YearlyCovidTestData
 
 class RowFactory():
 
@@ -95,8 +95,10 @@ class RowFactory():
                         (Total): TotalVaccination class object
         """
         return TotalVaccinationData(
-                    first_vacc=row[0],
-                    second_vacc=row[1]
+                    total_first_vacc=row[0],
+                    total_second_vacc=row[1],
+                    new_first_vacc=row[2],
+                    new_second_vacc=row[3]
                 )
 
     def YearlyVaccinationRowFactory(self, cursor, row):
@@ -148,4 +150,84 @@ class RowFactory():
                     date=row[0],
                     first_vacc=row[1],
                     second_vacc=row[2]
+                )
+
+
+    def TotalCovidTestDataRowFactory(self, cursor, row):
+        """
+        Sqlite row factory transfrom query result to TotalCovidTestData class object
+
+                Parameters:
+                        cursor (sqlite3.Cursor): sqlite cursor
+                        row : row result tuple
+
+                Returns:
+                        (TotalCovidTestData): TotalCovidTestData class object
+        """
+        return TotalCovidTestData(
+                    total_pcr_tcm_specimen = row[0],
+                    total_antigen_specimen = row[1],
+                    total_antigen = row[2],
+                    total_pcr_tcm = row[3],
+                    new_pcr_tcm_specimen = row[4],
+                    new_antigen_specimen = row[5],
+                    new_antigen = row[6],
+                    new_pcr_tcm = row[7]
+                )
+
+    def YearlyCovidTestDataRowFactory(self, cursor, row):
+        """
+        Sqlite row factory transfrom query result to YearlyCovidTestData class object
+
+                Parameters:
+                        cursor (sqlite3.Cursor): sqlite cursor
+                        row : row result tuple
+
+                Returns:
+                        (YearlyCovidTestData): YearlyCovidTestData class object
+        """
+        return YearlyCovidTestData(
+                    year = row[0],
+                    pcr_tcm_specimen = row[1],
+                    antigen_specimen = row[2],
+                    antigen = row[3],
+                    pcr_tcm = row[4]
+                )
+
+    def MonthlyCovidTestDataRowFactory(self, cursor, row):
+        """
+        Sqlite row factory transfrom query result to YearlyVaccination class object
+
+                Parameters:
+                        cursor (sqlite3.Cursor): sqlite cursor
+                        row : row result tuple
+
+                Returns:
+                        (YearlyVaccination): YearlyVaccination class object
+        """
+        return MonthlyCovidTestData(
+                    month = row[0],
+                    pcr_tcm_specimen = row[1],
+                    antigen_specimen = row[2],
+                    antigen = row[3],
+                    pcr_tcm = row[4]
+                )
+
+    def DailyCovidTestDataRowFactory(self, cursor, row):
+        """
+        Sqlite row factory transfrom query result to DailyCovidTestData class object
+
+                Parameters:
+                        cursor (sqlite3.Cursor): sqlite cursor
+                        row : row result tuple
+
+                Returns:
+                        (DailyCovidTestData): DailyCovidTestData class object
+        """
+        return DailyCovidTestData(
+                    date = row[0],
+                    pcr_tcm_specimen = row[1],
+                    antigen_specimen = row[2],
+                    antigen = row[3],
+                    pcr_tcm = row[4]
                 )

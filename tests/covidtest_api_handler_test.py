@@ -9,47 +9,48 @@ def createFlaskTestApp():
 
 
 def testGetGeneralInformation():
-    """[POSITIVE] Test Route /vaccination [get general information]"""
+    """[POSITIVE] Test Route /test [get general information]"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination')
+    response = testApp.get('/test')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     print(decodedJson['ok'])
     assert response.status_code == 200
     assert decodedJson['ok'] is True
-    assert list(decodedJson['data'].keys()) == ['total_first_vacc', 'total_second_vacc', 'new_first_vacc', 'new_second_vacc']
+    print(decodedJson['data'].keys())
+    assert list(decodedJson['data'].keys()) == ['total_pcr_tcm_specimen', 'total_antigen_specimen', 'total_antigen', 'total_pcr_tcm', 'new_pcr_tcm_specimen', 'new_antigen_specimen', 'new_antigen', 'new_pcr_tcm']
 
 
 def testGetYearlyData():
-    """[POSITIVE] Test Route /vaccination/yearly [get yearly cases]"""
+    """[POSITIVE] Test Route /test/yearly [get yearly cases]"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/yearly')
+    response = testApp.get('/test/yearly')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     print(decodedJson['data'][0].keys())
     assert response.status_code == 200
     assert decodedJson['ok'] is True
     assert len(decodedJson['data']) > 0
-    assert list(decodedJson['data'][0].keys()) == ['year', 'first_vacc', 'second_vacc']
+    assert list(decodedJson['data'][0].keys()) == ['year', 'pcr_tcm_specimen', 'antigen_specimen', 'antigen', 'pcr_tcm']
 
 
 def testGetYearlyDataWiyhRange():
-    """[POSITIVE] Test Route /vaccination/yearly?since=2020&upto=2021 [get yearly cases with year range]"""
+    """[POSITIVE] Test Route /test/yearly?since=2020&upto=2021 [get yearly cases with year range]"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/yearly?since=2020&upto=2021')
+    response = testApp.get('/test/yearly?since=2020&upto=2021')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     print(decodedJson['data'][0].keys())
     assert response.status_code == 200
     assert decodedJson['ok'] is True
     print(decodedJson['data'])
-    assert list(decodedJson['data'][0].keys()) == ['year', 'first_vacc', 'second_vacc']
+    assert list(decodedJson['data'][0].keys()) == ['year', 'pcr_tcm_specimen', 'antigen_specimen', 'antigen', 'pcr_tcm']
 
 
 def testGetYearlyDataWiyhRangeWrongQueryParamType():
-    """[NEGATIVE] Test Route /vaccination/yearly?since=abc&upto=2021 [get yearly cases with year range with alphabet]"""
+    """[NEGATIVE] Test Route /test/yearly?since=abc&upto=2021 [get yearly cases with year range with alphabet]"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/yearly?since=abc&upto=2021')
+    response = testApp.get('/test/yearly?since=abc&upto=2021')
     print(response.data)
     decodedJson = json.loads(response.data)
     assert response.status_code == 422
@@ -57,34 +58,34 @@ def testGetYearlyDataWiyhRangeWrongQueryParamType():
 
 
 def testGetYearlyDataWiyhRangeEmptyVSingleQueryParam():
-    """[POSITIVE] Test Route /vaccination/yearly?since=2020 [get yearly cases with year range with singlequery param]"""
+    """[POSITIVE] Test Route /test/yearly?since=2020 [get yearly cases with year range with singlequery param]"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/yearly?since=2020')
+    response = testApp.get('/test/yearly?since=2020')
     print(response.data)
     decodedJson = json.loads(response.data)
     print(decodedJson['data'][0].keys())
     assert response.status_code == 200
     assert decodedJson['ok'] is True
     assert len(decodedJson['data']) > 0
-    assert list(decodedJson['data'][0].keys()) == ['year', 'first_vacc', 'second_vacc']
+    assert list(decodedJson['data'][0].keys()) == ['year', 'pcr_tcm_specimen', 'antigen_specimen', 'antigen', 'pcr_tcm']
 
 
 def testGetCaseDataByYearInParam():
-    """[POSITIVE] Test Route /vaccination/yearly/2021 [get yearly cases by year]"""
+    """[POSITIVE] Test Route /test/yearly/2021 [get yearly cases by year]"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/yearly/2021')
+    response = testApp.get('/test/yearly/2021')
     print(response.data)
     decodedJson = json.loads(response.data)
     assert response.status_code == 200
     assert decodedJson['ok'] is True
     assert decodedJson['data']['year'] == '2021'
-    assert list(decodedJson['data'].keys()) == ['year', 'first_vacc', 'second_vacc']
+    assert list(decodedJson['data'].keys()) == ['year', 'pcr_tcm_specimen', 'antigen_specimen', 'antigen', 'pcr_tcm']
 
 
 def testGetCaseDataByYearInParamIfNotFound():
-    """[NEGATIVE] Test Route /vaccination/yearly/2029 [get yearly cases by year not found]"""
+    """[NEGATIVE] Test Route /test/yearly/2029 [get yearly cases by year not found]"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/yearly/2029')
+    response = testApp.get('/test/yearly/2029')
     print(response.data)
     decodedJson = json.loads(response.data)
     assert response.status_code == 404
@@ -92,9 +93,9 @@ def testGetCaseDataByYearInParamIfNotFound():
 
 
 def testGetCaseDataByYearInParamIfInvalidtype():
-    """[NEGATIVE] Test Route /vaccination/yearly/two [get yearly cases by year invalid type]"""
+    """[NEGATIVE] Test Route /test/yearly/two [get yearly cases by year invalid type]"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/yearly/two')
+    response = testApp.get('/test/yearly/two')
     print(response.data)
     decodedJson = json.loads(response.data)
     assert response.status_code == 422
@@ -102,22 +103,22 @@ def testGetCaseDataByYearInParamIfInvalidtype():
 
 
 def testGetMonthlyData():
-    """[POSITIVE] Test Route /vaccination/monthly?since=2021.05 [get monthly cases]"""
+    """[POSITIVE] Test Route /test/monthly?since=2021.05 [get monthly cases]"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/monthly?since=2021.05')
+    response = testApp.get('/test/monthly?since=2021.05')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     print(decodedJson['data'][0].keys())
     assert response.status_code == 200
     assert decodedJson['ok'] is True
     assert len(decodedJson['data']) > 0
-    assert list(decodedJson['data'][0].keys()) == ['month', 'first_vacc', 'second_vacc']
+    assert list(decodedJson['data'][0].keys()) == ['month', 'pcr_tcm_specimen', 'antigen_specimen', 'antigen', 'pcr_tcm']
 
 
 def testGetMonthlyDataWithWrongDateType():
-    """[NEGATIVE] Test Route /vaccination/monthly?since=2021.054 [get monthly cases] with wrong param"""
+    """[NEGATIVE] Test Route /test/monthly?since=2021.054 [get monthly cases] with wrong param"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/monthly?since=2021.054')
+    response = testApp.get('/test/monthly?since=2021.054')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     assert response.status_code == 422
@@ -126,22 +127,22 @@ def testGetMonthlyDataWithWrongDateType():
 
 
 def testGetMonthlyDataInSpesificYear():
-    """[POSITIVE] Test Route /vaccination/monthly/2021?since=2021.05 [get monthly cases in spesific year]"""
+    """[POSITIVE] Test Route /test/monthly/2021?since=2021.05 [get monthly cases in spesific year]"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/monthly/2021?since=2021.05')
+    response = testApp.get('/test/monthly/2021?since=2021.05')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     print(decodedJson['data'][0].keys())
     assert response.status_code == 200
     assert decodedJson['ok'] is True
     assert len(decodedJson['data']) > 0
-    assert list(decodedJson['data'][0].keys()) == ['month', 'first_vacc', 'second_vacc']
+    assert list(decodedJson['data'][0].keys()) == ['month', 'pcr_tcm_specimen', 'antigen_specimen', 'antigen', 'pcr_tcm']
 
 
 def testGetMonthlyDataInSpesificYearWithWrongYearQueryParam():
-    """[NEGATIVE] Test Route /vaccination/monthly?since=2021.054 [get monthly cases] with wrong month format (mont is not in spesific year)"""
+    """[NEGATIVE] Test Route /test/monthly?since=2021.054 [get monthly cases] with wrong month format (mont is not in spesific year)"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/monthly/2021?since=2020.04')
+    response = testApp.get('/test/monthly/2021?since=2020.04')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     assert response.status_code == 422
@@ -150,20 +151,20 @@ def testGetMonthlyDataInSpesificYearWithWrongYearQueryParam():
 
 
 def testGetMonthlySingleDataInSpesificYearMonth():
-    """[POSITIVE] Test Route /vaccination/monthly/2021/02 [get monthly cases in spesific year and month]"""
+    """[POSITIVE] Test Route /test/monthly/2021/05 [get monthly cases in spesific year and month]"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/monthly/2021/02')
+    response = testApp.get('/test/monthly/2021/05')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     assert response.status_code == 200
     assert decodedJson['ok'] is True
-    assert list(decodedJson['data'].keys()) == ['month', 'first_vacc', 'second_vacc']
+    assert list(decodedJson['data'].keys()) == ['month', 'pcr_tcm_specimen', 'antigen_specimen', 'antigen', 'pcr_tcm']
 
 
 def testGetMonthlySingleDataInSpesificYearMonthWithWrongParamFormat():
-    """[NEGATIVE] Test Route /vaccination/monthly/2021/39 [get monthly cases] with wrong format """
+    """[NEGATIVE] Test Route /test/monthly/2021/39 [get monthly cases] with wrong format """
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/monthly/2021/39')
+    response = testApp.get('/test/monthly/2021/39')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     assert response.status_code == 422
@@ -172,22 +173,22 @@ def testGetMonthlySingleDataInSpesificYearMonthWithWrongParamFormat():
 
 
 def testGetDailyData():
-    """[POSITIVE] Test Route /vaccination/daily?since=2021.05.01 [get daily cases]"""
+    """[POSITIVE] Test Route /test/daily?since=2021.05.01 [get daily cases]"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/daily?since=2021.05.01')
+    response = testApp.get('/test/daily?since=2021.05.01')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     print(decodedJson['data'][0].keys())
     assert response.status_code == 200
     assert decodedJson['ok'] is True
     assert len(decodedJson['data']) > 0
-    assert list(decodedJson['data'][0].keys()) == ['date', 'first_vacc', 'second_vacc']
+    assert list(decodedJson['data'][0].keys()) == ['date', 'pcr_tcm_specimen', 'antigen_specimen', 'antigen', 'pcr_tcm']
 
 
 def testGetDailyDataWithWrongDateType():
-    """[NEGATIVE] Test Route /vaccination/daily?since=2021.054 [get daily cases] with wrong param"""
+    """[NEGATIVE] Test Route /test/daily?since=2021.054 [get daily cases] with wrong param"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/daily?since=2021.054')
+    response = testApp.get('/test/daily?since=2021.054')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     assert response.status_code == 422
@@ -196,22 +197,22 @@ def testGetDailyDataWithWrongDateType():
 
 
 def testGetDailyDataInSpesificYear():
-    """[POSITIVE] Test Route /vaccination/daily/2021?since=2021.05.01 [get daily cases in spesific year]"""
+    """[POSITIVE] Test Route /test/daily/2021?since=2021.05.01 [get daily cases in spesific year]"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/daily/2021?since=2021.05.01')
+    response = testApp.get('/test/daily/2021?since=2021.05.01')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     print(decodedJson['data'][0].keys())
     assert response.status_code == 200
     assert decodedJson['ok'] is True
     assert len(decodedJson['data']) > 0
-    assert list(decodedJson['data'][0].keys()) == ['date', 'first_vacc', 'second_vacc']
+    assert list(decodedJson['data'][0].keys()) == ['date', 'pcr_tcm_specimen', 'antigen_specimen', 'antigen', 'pcr_tcm']
 
 
 def testGetDailyDataInSpesificYearWithWrongYearQueryParam():
-    """[NEGATIVE] Test Route /vaccination/monthly?since=2021.059.03 [get daily cases] with wrong date format (date is not in spesific year)"""
+    """[NEGATIVE] Test Route /test/monthly?since=2021.059.03 [get daily cases] with wrong date format (date is not in spesific year)"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/monthly/2021?since=2020.04')
+    response = testApp.get('/test/monthly/2021?since=2020.04')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     assert response.status_code == 422
@@ -220,20 +221,20 @@ def testGetDailyDataInSpesificYearWithWrongYearQueryParam():
 
 
 def testGetDailySingleDataInSpesificYearMonth():
-    """[POSITIVE] Test Route /vaccination/daily/2021/02 [get daily cases in spesific date]"""
+    """[POSITIVE] Test Route /test/daily/2021/02 [get daily cases in spesific date]"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/daily/2021/02')
+    response = testApp.get('/test/daily/2021/02')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     assert response.status_code == 200
     assert decodedJson['ok'] is True
-    assert list(decodedJson['data'][0].keys()) == ['date', 'first_vacc', 'second_vacc']
+    assert list(decodedJson['data'][0].keys()) == ['date', 'pcr_tcm_specimen', 'antigen_specimen', 'antigen', 'pcr_tcm']
 
 
 def testGetDailySingleDataInSpesificYearMonthWithWrongParamFormat():
-    """[NEGATIVE] Test Route /vaccination/daily/2021/39 [get daily cases] with wrong format """
+    """[NEGATIVE] Test Route /test/daily/2021/39 [get daily cases] with wrong format """
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/daily/2021/39')
+    response = testApp.get('/test/daily/2021/39')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     assert response.status_code == 422
@@ -242,22 +243,23 @@ def testGetDailySingleDataInSpesificYearMonthWithWrongParamFormat():
 
 
 def testGetDailyVaccDataInSpesificYear():
-    """[POSITIVE] Test Route /vaccination/daily/2021/05?since=2021.05.01 [get daily cases in spesific year month]"""
+    """[POSITIVE] Test Route /test/daily/2021/05?since=2021.05.01 [get daily cases in spesific year month]"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/daily/2021/05?since=2021.05.01')
+    response = testApp.get('/test/daily/2021/05?since=2021.05.01')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     print(decodedJson['data'][0].keys())
     assert response.status_code == 200
     assert decodedJson['ok'] is True
     assert len(decodedJson['data']) > 0
-    assert list(decodedJson['data'][0].keys()) == ['date', 'first_vacc', 'second_vacc']
+    print(decodedJson['data'][0].keys())
+    assert list(decodedJson['data'][0].keys()) == ['date', 'pcr_tcm_specimen', 'antigen_specimen', 'antigen', 'pcr_tcm']
 
 
 def testGetDailyVaccDataInSpesificYearWithWrongYearQueryParam():
-    """[NEGATIVE] Test Route /vaccination/daily/2021/05?since=2021e.05.01 [get daily cases] with wrong month format (mont is not in spesific year)"""
+    """[NEGATIVE] Test Route /test/daily/2021/05?since=2021e.05.01 [get daily cases] with wrong month format (mont is not in spesific year)"""
     testApp = createFlaskTestApp()
-    response = testApp.get('/vaccination/daily/2021/05?since=2021e.05.01')
+    response = testApp.get('/test/daily/2021/05?since=2021e.05.01')
     print(response.status_code)
     decodedJson = json.loads(response.data)
     assert response.status_code == 422

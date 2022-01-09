@@ -7,6 +7,9 @@ from repositories.CovidDataRepository import CovidDataRepository
 from repositories.VaccinationDataRepository import VaccinationDataRepository
 from usecases.CovidUseCase import CovidUseCase
 from usecases.VaccinationUseCase import VaccinationUseCase
+from repositories.CovidTestDataRepository import CovidTestDataRepository
+from usecases.CovidTestUseCase import CovidTestUseCase
+from handlers.CovidTestApiHandler import CovidTestApiHandler
 import logging
 
 
@@ -23,11 +26,6 @@ logging.basicConfig(
     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
     datefmt='%H:%M:%S',
 )
-stdoutHandler = logging.StreamHandler(stdout)
-stdoutHandler.setFormatter(
-    logging.Formatter('%(name)s - %(levelname)s - %(message)s')
-)
-logging.getLogger('root').addHandler(stdoutHandler)
 
 # starting dependeny injection
 db = sqlite3.connect(
@@ -52,6 +50,13 @@ vaccRepository = VaccinationDataRepository(db)
 vaccApiUseCase = VaccinationUseCase(vaccRepository)
 vaccApiHandler = VaccinationApiHandler(app, vaccApiUseCase)
 vaccApiHandler.route()
+
+
+# covid test data
+covidTestRepository = CovidTestDataRepository(db)
+covidTestApiUseCase = CovidTestUseCase(covidTestRepository)
+covidTestApiHandler = CovidTestApiHandler(app, covidTestApiUseCase)
+covidTestApiHandler.route()
 
 
 if __name__ == "__main__":

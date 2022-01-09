@@ -1,6 +1,6 @@
 from sqlite3.dbapi2 import OperationalError
-from entites.vaccination_data_entity import DailyVaccinationData, TotalVaccinationData, YearlyVaccinationData, MonthlyVaccinationData
-from repositories.VaccinationDataRepository import VaccinationDataRepository
+from entites.covid_testing_data_entity import DailyCovidTestData, TotalCovidTestData, YearlyCovidTestData, MonthlyCovidTestData
+from repositories.CovidTestDataRepository import CovidTestDataRepository
 from repositories.MinistryDataRepository import MinistryDataRepository
 import sqlite3
 import time
@@ -11,14 +11,14 @@ from dateutil.relativedelta import relativedelta
 def _repository():
     """Helper dependency injection"""
     db = sqlite3.connect('covid_database.db', isolation_level=None)
-    return VaccinationDataRepository(db)
+    return CovidTestDataRepository(db)
 
 
 def testGetTotalDatasAllTimeNegative():
     """Negative Test Get total Data all time if repository error
     """
     db = sqlite3.connect('covid_database.dbl', isolation_level=None)
-    repo = VaccinationDataRepository(db)
+    repo = CovidTestDataRepository(db)
     res, err = repo.getLastUpdateSummary()
     print(res)
     assert err is not None
@@ -32,7 +32,7 @@ def testGetTotalDatasAllTime():
     res, err = repo.getLastUpdateSummary()
     print(res)
     assert err is None
-    assert isinstance(res, TotalVaccinationData)
+    assert isinstance(res, TotalCovidTestData)
 
 
 def testGetDatabaseDataYearly():
@@ -41,7 +41,7 @@ def testGetDatabaseDataYearly():
     repo = _repository()
     res, _ = repo.getYearlyData(2020, 2023)
 
-    assert isinstance(res[0], YearlyVaccinationData)
+    assert isinstance(res[0], YearlyCovidTestData)
 
 
 def testTruncate():
@@ -59,9 +59,9 @@ def testSyncData():
     ministryRepo = MinistryDataRepository()
     repo.truncateData()
 
-    vaccData, _, _ = ministryRepo.getDailyTestAndVaccinationData()
-
-    err = repo.bulkInsertDailyData(vaccData)
+    _, data, _ = ministryRepo.getDailyTestAndVaccinationData()
+    err = repo.bulkInsertDailyData(data)
+    print(err)
     assert err is None
 
 
@@ -72,8 +72,8 @@ def testGetDataByYear():
     res, err = repo.getDataByYear(2022)
     print(res)
     assert err is None
-    assert isinstance(res, YearlyVaccinationData)
-    assert res.first_vacc > 0
+    assert isinstance(res, YearlyCovidTestData)
+    assert res.pcr_tcm > 0
 
 
 def testGetMonthlyDataWithRange():
@@ -90,16 +90,17 @@ def testGetMonthlyDataWithRange():
     print(type(res))
     assert err is None
     assert isinstance(res, list)
-    assert isinstance(res[0], MonthlyVaccinationData)
+    assert isinstance(res[0], MonthlyCovidTestData)
 
 
 def testGetDailyData():
     """Positive Test Get daily Data data
     """
-    since = time.mktime(datetime.strptime("2021.05.01", "%Y.%m.%d").timetuple())
-    upto = time.mktime((datetime.strptime("2021.05.10", "%Y.%m.%d") + relativedelta(days=1)).timetuple())
+    since = time.mktime(datetime.strptime("2021.02.01", "%Y.%m.%d").timetuple())
+    upto = time.mktime((datetime.strptime("2021.02.20", "%Y.%m.%d") + relativedelta(days=1)).timetuple())
     repo = _repository()
     res, err = repo.getDailyData(since, upto)
+    print(res)
     assert err is None
-    assert isinstance(res[0], DailyVaccinationData)
+    #assert isinstance(res[0], DailyCovidTestData)
     assert len(res) > 0

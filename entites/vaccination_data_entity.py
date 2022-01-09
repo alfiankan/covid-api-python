@@ -14,8 +14,10 @@ class DailyVaccinationData:
 @dataclass_json
 @dataclass
 class TotalVaccinationData():
-    first_vacc: int = 0
-    second_vacc: int = 0
+    total_first_vacc: int = 0
+    total_second_vacc: int = 0
+    new_first_vacc: int = 0
+    new_second_vacc: int = 0
 
 
 @dataclass_json
