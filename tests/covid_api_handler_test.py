@@ -15,7 +15,7 @@ def testGetGeneralInformation():
     print(decodedJson['ok'])
     assert response.status_code == 200
     assert decodedJson['ok'] == True
-    assert list(decodedJson['data'].keys()) == ['total_positive', 'total_recovered', 'total_death', 'total_active', 'new_positive', 'new_recovered', 'new_death', 'new_active']
+    assert list(decodedJson['data'].keys()) == ['total_positive', 'total_recovered', 'total_deaths', 'total_active', 'new_positive', 'new_recovered', 'new_deaths', 'new_active']
 
 def testGetYearlyData():
     """[POSITIVE] Test Route /yearly [get yearly cases]"""
@@ -27,7 +27,7 @@ def testGetYearlyData():
     assert response.status_code == 200
     assert decodedJson['ok'] == True
     assert len(decodedJson['data']) > 0
-    assert list(decodedJson['data'][0].keys()) == ['year', 'positive', 'recovered', 'death', 'active']
+    assert list(decodedJson['data'][0].keys()) == ['year', 'positive', 'recovered', 'deaths', 'active']
 
 def testGetYearlyDataWiyhRange():
     """[POSITIVE] Test Route /yearly?since=2020&upto=2021 [get yearly cases with year range]"""
@@ -41,7 +41,7 @@ def testGetYearlyDataWiyhRange():
     assert len(decodedJson['data']) == 2 # only result 2020 and 2021
     assert decodedJson['data'][0]['year'] == '2020'
     assert decodedJson['data'][1]['year'] == '2021'
-    assert list(decodedJson['data'][0].keys()) == ['year', 'positive', 'recovered', 'death', 'active']
+    assert list(decodedJson['data'][0].keys()) == ['year', 'positive', 'recovered', 'deaths', 'active']
 
 
 def testGetYearlyDataWiyhRangeWrongQueryParamType():
@@ -65,7 +65,7 @@ def testGetYearlyDataWiyhRangeEmptyVSingleQueryParam():
     assert decodedJson['ok'] == True
     assert len(decodedJson['data']) > 0
     assert decodedJson['data'][0]['year'] == '2020'
-    assert list(decodedJson['data'][0].keys()) == ['year', 'positive', 'recovered', 'death', 'active']
+    assert list(decodedJson['data'][0].keys()) == ['year', 'positive', 'recovered', 'deaths', 'active']
 
 def testGetCaseDataByYearInParam():
     """[POSITIVE] Test Route /yearly/2021 [get yearly cases by year]"""
@@ -76,7 +76,7 @@ def testGetCaseDataByYearInParam():
     assert response.status_code == 200
     assert decodedJson['ok'] == True
     assert decodedJson['data']['year'] == '2021'
-    assert list(decodedJson['data'].keys()) == ['year', 'positive', 'recovered', 'death', 'active']
+    assert list(decodedJson['data'].keys()) == ['year', 'positive', 'recovered', 'deaths', 'active']
 
 
 def testGetCaseDataByYearInParamIfNotFound():
@@ -110,7 +110,7 @@ def testGetMonthlyData():
     assert response.status_code == 200
     assert decodedJson['ok'] == True
     assert len(decodedJson['data']) > 0
-    assert list(decodedJson['data'][0].keys()) == ['month', 'positive', 'recovered', 'death', 'active']
+    assert list(decodedJson['data'][0].keys()) == ['month', 'positive', 'recovered', 'deaths', 'active']
 
 
 def testGetMonthlyDataWithWrongDateType():
@@ -135,7 +135,7 @@ def testGetMonthlyDataInSpesificYear():
     assert response.status_code == 200
     assert decodedJson['ok'] == True
     assert len(decodedJson['data']) > 0
-    assert list(decodedJson['data'][0].keys()) == ['month', 'positive', 'recovered', 'death', 'active']
+    assert list(decodedJson['data'][0].keys()) == ['month', 'positive', 'recovered', 'deaths', 'active']
 
 
 def testGetMonthlyDataInSpesificYearWithWrongYearQueryParam():
@@ -156,7 +156,7 @@ def testGetMonthlySingleDataInSpesificYearMonth():
     decodedJson = json.loads(response.data)
     assert response.status_code == 200
     assert decodedJson['ok'] == True
-    assert list(decodedJson['data'].keys()) == ['month', 'positive', 'recovered', 'death', 'active']
+    assert list(decodedJson['data'].keys()) == ['month', 'positive', 'recovered', 'deaths', 'active']
 
 
 def testGetMonthlySingleDataInSpesificYearMonthWithWrongParamFormat():
@@ -180,7 +180,7 @@ def testGetDailyData():
     assert response.status_code == 200
     assert decodedJson['ok'] == True
     assert len(decodedJson['data']) > 0
-    assert list(decodedJson['data'][0].keys()) == ['date', 'positive', 'recovered', 'death', 'active']
+    assert list(decodedJson['data'][0].keys()) == ['date', 'positive', 'recovered', 'deaths', 'active']
 
 
 def testGetDailyDataWithWrongDateType():
@@ -205,7 +205,7 @@ def testGetDailyDataInSpesificYear():
     assert response.status_code == 200
     assert decodedJson['ok'] == True
     assert len(decodedJson['data']) > 0
-    assert list(decodedJson['data'][0].keys()) == ['date', 'positive', 'recovered', 'death', 'active']
+    assert list(decodedJson['data'][0].keys()) == ['date', 'positive', 'recovered', 'deaths', 'active']
 
 
 def testGetDailyDataInSpesificYearWithWrongYearQueryParam():
@@ -227,7 +227,7 @@ def testGetDailySingleDataInSpesificYearMonth():
     decodedJson = json.loads(response.data)
     assert response.status_code == 200
     assert decodedJson['ok'] == True
-    assert list(decodedJson['data'][0].keys()) == ['date', 'positive', 'recovered', 'death', 'active']
+    assert list(decodedJson['data'][0].keys()) == ['date', 'positive', 'recovered', 'deaths', 'active']
 
 
 def testGetDailySingleDataInSpesificYearMonthWithWrongParamFormat():
@@ -252,7 +252,7 @@ def testGetDailyDataInSpesificYear():
     assert response.status_code == 200
     assert decodedJson['ok'] == True
     assert len(decodedJson['data']) > 0
-    assert list(decodedJson['data'][0].keys()) == ['date', 'positive', 'recovered', 'death', 'active']
+    assert list(decodedJson['data'][0].keys()) == ['date', 'positive', 'recovered', 'deaths', 'active']
 
 
 def testGetDailyDataInSpesificYearWithWrongYearQueryParam():

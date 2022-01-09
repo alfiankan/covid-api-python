@@ -64,7 +64,7 @@ else:
     print('scheduler running on {}'.format(os.getpid()))
 
     # schedule job every 5 hours
-    schedule.every(5).hours.do(runScheduler)
+    schedule.every(1).hours.do(runScheduler)
     while True:
         schedule.run_pending()
         time.sleep(1)

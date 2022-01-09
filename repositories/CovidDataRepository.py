@@ -82,7 +82,7 @@ class CovidDataRepository():
             # build query statement for bulk insert
             stmt = Query.Table(self._tableName)
             for row in data:
-                stmt = stmt.insert((row.date, row.positive, row.recovered, row.death, row.active))
+                stmt = stmt.insert((row.date, row.positive, row.recovered, row.deaths, row.active))
 
             #  insert
             self._db.execute(str(stmt))

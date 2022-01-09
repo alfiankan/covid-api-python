@@ -8,11 +8,11 @@ class TotalCase:
     """Represent Total Covid Case"""
     total_positive: int = 0
     total_recovered: int = 0
-    total_death: int = 0
+    total_deaths: int = 0
     total_active: int = 0
     new_positive: int = 0
     new_recovered: int = 0
-    new_death: int = 0
+    new_deaths: int = 0
     new_active: int = 0
 
 @dataclass_json
@@ -22,7 +22,7 @@ class DailyCase:
     date: Any = 0
     positive: int = 0
     recovered: int = 0
-    death: int = 0
+    deaths: int = 0
     active: int = 0
 
 
@@ -33,7 +33,7 @@ class YearlyCase:
     year: Any = 0
     positive: int = 0
     recovered: int = 0
-    death: int = 0
+    deaths: int = 0
     active: int = 0
 
 
@@ -45,5 +45,5 @@ class MonthlyCase:
     month: Any = 0
     positive: int = 0
     recovered: int = 0
-    death: int = 0
+    deaths: int = 0
     active: int = 0

@@ -32,6 +32,7 @@ def testGetCaseByYear():
     """
     useCase = _useCase()
     result, err = useCase.getCaseByYear(2022)
+    print(result)
     isinstance(result, YearlyCase)
     assert err is None
     assert result.active > 0

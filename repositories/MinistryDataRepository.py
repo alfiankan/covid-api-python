@@ -77,7 +77,7 @@ class MinistryDataRepository():
                     date=row['key']/1000,
                     positive=row['jumlah_positif']['value'],
                     recovered=row['jumlah_sembuh']['value'],
-                    death=row['jumlah_meninggal']['value'],
+                    deaths=row['jumlah_meninggal']['value'],
                     active=row['jumlah_positif']['value']
                 ))
 

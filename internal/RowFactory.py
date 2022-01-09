@@ -18,11 +18,11 @@ class RowFactory():
         return TotalCase(
                     total_positive=row[0],
                     total_recovered=row[1],
-                    total_death=row[2],
+                    total_deaths=row[2],
                     total_active=row[3],
                     new_positive=row[4],
                     new_recovered=row[5],
-                    new_death=row[6],
+                    new_deaths=row[6],
                     new_active=row[7],
                 )
 
@@ -41,7 +41,7 @@ class RowFactory():
                     year=row[0],
                     positive=row[1],
                     recovered=row[2],
-                    death=row[3],
+                    deaths=row[3],
                     active=row[4]
                 )
 
@@ -60,7 +60,7 @@ class RowFactory():
                     month=row[0],
                     positive=row[1],
                     recovered=row[2],
-                    death=row[3],
+                    deaths=row[3],
                     active=row[4]
                 )
 
@@ -79,7 +79,7 @@ class RowFactory():
                     date=row[0],
                     positive=row[1],
                     recovered=row[2],
-                    death=row[3],
+                    deaths=row[3],
                     active=row[4]
                 )
 
