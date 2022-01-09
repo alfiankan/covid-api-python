@@ -9,5 +9,3 @@ RUN apt update && apt install make
 RUN make install
 
 CMD ["make", "start"]
-
-EXPOSE 3000
