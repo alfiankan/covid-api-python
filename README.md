@@ -9,10 +9,11 @@
 - [ How to test ](#4)
 - [ How to run ](#5)
 - [ Architectural Design ](#6)
-- [ Src ](#7)
-- [ Data Integrity ](#8)
-- [ Docker Image ](#9)
-- [ Api Docs ](#10)
+- [ Scheduler ](#7)
+- [ Notes ](#8)
+- [ Data Integrity ](#9)
+- [ Docker Image ](#10)
+- [ Api Docs ](#11)
 
 <a name="1"></a>
 ## How to use
@@ -22,7 +23,7 @@
      > Follow this step : [ How to build ](#3)
   3. Using prebuilt Docker image
       ```
-      docker container run -p 3000:3000 alfiantech/indonesia-covid-api:lastest
+      docker container run -p <HOST_PORT>:3000 alfiantech/indonesia-covid-api:lastest
       ```
 
 <a name="2"></a>
@@ -39,7 +40,7 @@
   2. To install predefined python package use `make install`
   4. To sync with source data run `make syncdata`
   5. To run development server run `make dev`
-  6. To run production server run `export PORT=3000 && make start`
+  6. To run production server run `export PORT=<HOST_PORT> && make start`
   7. To build as docker image run `docker build -t <imagename>:<tag> .`
 
 
@@ -119,7 +120,7 @@
       werkzeug - WARNING -  * Debugger is active!
       werkzeug - INFO -  * Debugger PIN: 639-723-256
       ```
-  - To run production server run `make start`
+  - To run production server run `export PORT=<HOST_PORT> && make start`
       > output
       ```
       ╰─ export PORT=3000 && make start
@@ -129,23 +130,34 @@
         [2022-01-09 15:25:08 +0700] [31407] [INFO] Using worker: sync
         [2022-01-09 15:25:08 +0700] [31408] [INFO] Booting worker with pid: 31408
       ```
-  - To run as docker container `docker container run -p 3000:3000 alfiantech/indonesia-covid-api:lastest`
+  - To run as docker container `docker container run -p <HOST_PORT>:3000 alfiantech/indonesia-covid-api:lastest`
 
 <a name="6"></a>
 ## Architectural Design
 
 <a name="7"></a>
-## Src
+## scheduler
+    <ilustrasi gambar>
+  - scheduler run sync job every 1 hours
+  - scheduler will terminate if main app down, using health checking
+  - 
 
 <a name="8"></a>
-## Data Integrity
+## Note
+    - 
 
 <a name="9"></a>
-## Docker Image
+## Data Integrity
+  - to make sure local data is up to date, scheduler will doing this job every 1 hour
 
 <a name="10"></a>
-## Api Docs
+## Docker Image
+    https://hub.docker.com/r/alfiantech/indonesia-covid-api
 
+<a name="11"></a>
+## Api Docs
+  > here is API docs with example response :<br><br>
+  [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/7847165-0d3be7de-dd45-4183-822c-174b6ef6db3e?action=collection%2Ffork&collection-url=entityId%3D7847165-0d3be7de-dd45-4183-822c-174b6ef6db3e%26entityType%3Dcollection%26workspaceId%3D04cc5d73-b93a-4a0e-ae83-43e1c6e73e6d#?env%5Bnodeflux%5D=W3sia2V5IjoiaG9zdCIsInZhbHVlIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiZW5hYmxlZCI6dHJ1ZX1d)
 
 
 
@@ -187,4 +199,4 @@
 
 
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/7847165-0d3be7de-dd45-4183-822c-174b6ef6db3e?action=collection%2Ffork&collection-url=entityId%3D7847165-0d3be7de-dd45-4183-822c-174b6ef6db3e%26entityType%3Dcollection%26workspaceId%3D04cc5d73-b93a-4a0e-ae83-43e1c6e73e6d#?env%5Bnodeflux%5D=W3sia2V5IjoiaG9zdCIsInZhbHVlIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiZW5hYmxlZCI6dHJ1ZX1d)
+
