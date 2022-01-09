@@ -1,6 +1,6 @@
 [![Build & Test](https://github.com/alfiankan/covid-api-python/actions/workflows/python-app.yml/badge.svg)](https://github.com/alfiankan/covid-api-python/actions/workflows/python-app.yml)  &nbsp;&nbsp; [![Docker Hub Image](https://github.com/alfiankan/covid-api-python/actions/workflows/build-image.yml/badge.svg)](https://github.com/alfiankan/covid-api-python/actions/workflows/build-image.yml) &nbsp;&nbsp; [![Deploy to Heroku.](https://github.com/alfiankan/covid-api-python/actions/workflows/heroku.yml/badge.svg)](https://github.com/alfiankan/covid-api-python/actions/workflows/heroku.yml)
 
-# Indonesia Covid-19 Api
+# Indonesia Covid-19 Api (Cases, Vaccination and Test)
 
 ## Table of Content
 - [ How to use ](#1)
@@ -28,10 +28,10 @@
       ```
 
 <a name="2"></a>
-## Requirements 
+## Requirements
   - python 3
   - make
-  - install python required package using : 
+  - install python required package using :
     ```
     make install
     ```
@@ -50,7 +50,7 @@
 ## How to test &nbsp;&nbsp; 🧪
   - Verbose testing run `make test`
       > output :
-      
+
         tests/unit/database_test.py::testSqliteConnection PASSED                                          [ 88%]
         tests/unit/ministry_repository_test.py::testGetDailyCaseData PASSED                               [ 89%]
         tests/unit/ministry_repository_test.py::testGetDailyVaccinationData PASSED                        [ 91%]
@@ -61,10 +61,10 @@
         tests/unit/validator_test.py::testValidationErrMessage PASSED                                     [ 97%]
         tests/unit/validator_test.py::testIsValidationError PASSED                                        [ 98%]
         tests/unit/validator_test.py::testValidateDateInput PASSED                                        [100%]
-        
+
   - Coverage test run `make cover`
       > Output :
-      
+
                   ---------- coverage: platform darwin, python 3.9.7-final-0 -----------
         Name                                                                                Stmts   Miss  Cover
         -------------------------------------------------------------------------------------------------------
@@ -153,13 +153,13 @@
   - scheduler run sync job every 1 hours
   - scheduler will terminate if main app down, using health checking
   - the app is not to directly make an api call to the public api https://data.covid19.go.id/public/api/ because :
-      - https://data.covid19.go.id/public/api/ api is not realtime, from my research is update +1, for example: today data will be shown tommorow. 
+      - https://data.covid19.go.id/public/api/ api is not realtime, from my research is update +1, for example: today data will be shown tommorow.
       - if we make a request directly to the public api (user -> app -> public api) will increase latency or my be egress bandwidth, or other things like public api server being spiked (become slow).
       - by syncing for x intervals and storing as local data (or it can be called cache) will provide other benefits like we can use sql script to run data agregation or filtering.
 
 <a name="8"></a>
 ## Note
-    - 
+    -
 
 <a name="9"></a>
 ## Data Integrity
