@@ -28,6 +28,7 @@
 
 <a name="2"></a>
 ## Requirements 
+  - python 3
   - make
   - install python required package using : 
     ```
@@ -134,13 +135,26 @@
 
 <a name="6"></a>
 ## Architectural Design
+![arch](https://user-images.githubusercontent.com/40946917/148677969-2517fd9b-cd3b-487d-9c41-9211e96a03d9.jpeg)
+
+  - this application adopts a clean architecture design with some modification. the main layer is repository, usecase, and handler
+  - folder :
+      - entity folder contains data class object, represents data which will be processed in the application
+      - repository folder contains class that handles the process of querying data from the database and requests to the public api, the repository aims to interact directly with the data and then convert it to entity object
+      - usecase folder contains usecase/business logic as interfaces to (app api) that can be used by various handlers such as http api, cli, rpc, etc.
+      - handler folder contains class to handle requests from users, in this case via the http api, the handler will validate and adjust the request so that it can be used to run the use case. returned data from use case will be sent again to the user.
+      - internal folder contains library/module
 
 <a name="7"></a>
 ## scheduler
-    <ilustrasi gambar>
+   ![sync](https://user-images.githubusercontent.com/40946917/148677976-7e1a5c57-9845-4c6b-a48d-a4690a424f4e.jpeg)
+
   - scheduler run sync job every 1 hours
   - scheduler will terminate if main app down, using health checking
-  - 
+  - the app is not to directly make an api call to the public api https://data.covid19.go.id/public/api/ because :
+      - https://data.covid19.go.id/public/api/ api is not realtime, from my research is update +1, for example: today data will be shown tommorow. 
+      - if we make a request directly to the public api (user -> app -> public api) will increase latency or my be egress bandwidth, or other things like public api server being spiked (become slow).
+      - by syncing for x intervals and storing as local data (or it can be called cache) will provide other benefits like we can use sql script to run data agregation or filtering.
 
 <a name="8"></a>
 ## Note
@@ -161,41 +175,6 @@
 
 
 
-
-
-
-## Todo :
-<a name="desc"></a>
-
-- [x] Entry point for all API, provide general information of covid cases.
-- [x] Provide yearly data of total covid cases.
-- [x] Provide yearly data of total covid cases of the year provided in <year>.
-
-- [x] Provide monthly data of total covid cases.
-- [x] Provide monthly data of total covid cases in the year provided in <year>.
-- [x] Provide monthly data of total covid cases in the month and year provided in <year> and <month>.
-
-- [x] Provide daily data of covid cases.
-- [x] Provide daily data of covid cases in the year provided in <year>
-- [x] Provide daily data of covid cases in the year and month provided in <year> and <month>
-- [x] Provide daily data of covid cases on the day provided in <year>, <month> and, <date>
-
-
-
-
-
-- [x] Entry point for all API, provide general information of vaccination.
-- [x] Provide yearly data of total vaccination.
-- [x] Provide yearly data of total vaccination of the year provided in <year>.
-
-- [x] Provide monthly data of total vaccination.
-- [x] Provide monthly data of total vaccination in the year provided in <year>.
-- [x] Provide monthly data of total vaccination in the month and year provided in <year> and <month>.
-
-- [x] Provide daily data of vaccination.
-- [x] Provide daily data of vaccination in the year provided in <year>
-- [x] Provide daily data of vaccination in the year and month provided in <year> and <month>.
-- [x] Provide daily data of vaccination on the day provided in <year>, <month> and, <date>.
 
 
 
