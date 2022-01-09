@@ -8,3 +8,21 @@ python-dateutil
 schedule
 gunicorn
 argparse
+
+
+
+
+
+╰─ loadtest "http://localhost:3000/yearly?since=2020&upto=2022" -n 1000 -c 10
+[Mon Jan 10 2022 00:10:00 GMT+0700 (Western Indonesia Time)] INFO Requests: 0 (0%), requests per second: 0, mean latency: 0 ms
+[Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO
+[Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Target URL:          http://localhost:3000/yearly?since=2020&upto=2022
+[Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Max requests:        1000
+[Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Concurrency level:   10
+[Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Agent:               none
+[Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO
+[Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Completed requests:  1000
+[Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Total errors:        0
+[Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Total time:          3.072043278 s
+[Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Requests per second: 326
+[Mon Jan 10 2022 00:10:03 GMT+0700 (Western Indonesia Time)] INFO Mean latency:        30.4 ms
