@@ -4,9 +4,12 @@ WORKDIR /app
 
 COPY . .
 
-RUN export LC_ALL=C
+
 
 RUN apt update -y && apt install make -y && apt install gunicorn -y
+
+RUN export LC_ALL=C && dpkg-reconfigure locales
+
 
 RUN make install
 
