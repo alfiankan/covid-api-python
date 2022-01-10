@@ -23,7 +23,7 @@
      > Follow this step : [ How to build ](#3)
   3. Using prebuilt Docker image
       ```
-      docker container run -p <HOST_PORT>:3000 alfiantech/indonesia-covid-api:lastest
+      docker container run -p <HOST_PORT>:3000 alfiantech/indonesia-covid-api
       ```
 
 <a name="2"></a>
@@ -132,7 +132,7 @@
         [2022-01-09 15:25:08 +0700] [31407] [INFO] Using worker: sync
         [2022-01-09 15:25:08 +0700] [31408] [INFO] Booting worker with pid: 31408
       ```
-  - To run as docker container `docker container run -p <HOST_PORT>:3000 alfiantech/indonesia-covid-api:lastest`
+  - To run as docker container `docker container run -p <HOST_PORT>:3000 alfiantech/indonesia-covid-api`
 
 <a name="6"></a>
 ## Architectural Design
