@@ -6,7 +6,7 @@ COPY . .
 
 
 
-RUN apt update -y && apt install make -y && apt install gunicorn -y
+RUN apt update -y && apt install make -y && apt install gunicorn -y && apt install locales -y
 
 RUN export LC_ALL=C && dpkg-reconfigure locales
 
