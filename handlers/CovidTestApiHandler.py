@@ -4,15 +4,15 @@ import logging
 from flask import Flask, Response, request
 from entites.BaseEntity import BaseApiResponse
 from validation.http_api_validation import isValidationError, validateIsNumber, validateIsmatchDateFormat, validationErrMessage
-from usecases.VaccinationUseCase import VaccinationUseCase
+from usecases.CovidTestUseCase import CovidTestUseCase
 import time
 
 
 class CovidTestApiHandler():
-    def __init__(self, flaskApp: Flask, vaccUseCase: VaccinationUseCase):
+    def __init__(self, flaskApp: Flask, covidTestUseCase: CovidTestUseCase):
         self.http = flaskApp
         # init usecase deps
-        self.useCase = vaccUseCase
+        self.useCase = covidTestUseCase
         # get root logger
         self.logger = logging.getLogger('root')
 

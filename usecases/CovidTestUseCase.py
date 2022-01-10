@@ -18,9 +18,9 @@ class CovidTestUseCase():
     ministryRepository : MinistryDataRepository
         source data repository object
     """
-    def __init__(self, vaccRepository: CovidTestDataRepository, ministryRepository: MinistryDataRepository = None):
+    def __init__(self, covidTestRepository: CovidTestDataRepository, ministryRepository: MinistryDataRepository = None):
         # init repository deps
-        self._covidTestRepository = vaccRepository
+        self._covidTestRepository = covidTestRepository
         self._ministryRepository = ministryRepository
 
     def getGeneralInformation(self):
@@ -78,8 +78,8 @@ class CovidTestUseCase():
             return err
         else:
             # if no error update data
-            self._vaccRepository.truncateData()
-            self._vaccRepository.bulkInsertDailyData(sourceData)
+            self._covidTestRepository.truncateData()
+            self._covidTestRepository.bulkInsertDailyData(sourceData)
 
     def getMonthlyData(self, since: str = '2020.01', upto: str = datetime.utcfromtimestamp(time.time()).strftime("%Y.%m")):
         """Provide Data monthly if empty return all monthly data
