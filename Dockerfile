@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY . .
 
+RUN export LC_ALL=C
+
 RUN apt update -y && apt install make -y && apt install gunicorn -y
 
 RUN make install
